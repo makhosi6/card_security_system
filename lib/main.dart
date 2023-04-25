@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:card_security_system/models/country.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -17,8 +18,8 @@ main() {
       };
 
       /// Fallback page on fatal error
-      ErrorWidget.builder = (details) => Container(
-            child: Center(child: Text("Error: $details")),
+      ErrorWidget.builder = (details) => Scaffold(
+            body: Center(child: Text("Error: $details")),
           );
 
       runApp(const App());
@@ -44,6 +45,7 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  var country = const Country(code: "GB", name: "SATAFRIKA");
   var _count = 0;
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class _AppState extends State<App> {
         body: Center(
           child: SizedBox(
             child: Column(
-              children: [const Text('Counter'), Text("$_count")],
+              children: [Text('${country.flag()} Counter'), Text("$_count")],
             ),
           ),
         ),

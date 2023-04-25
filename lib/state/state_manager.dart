@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
 class StateManager extends InheritedWidget {
-  const StateManager({super.key, required this.child}) : super(child: child);
-
-  @override
-  final Widget child;
+  const StateManager({super.key, required Widget child}) : super(child: child);
 
   static StateManager? of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<StateManager>();
