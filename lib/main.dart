@@ -17,8 +17,8 @@ main() {
       };
 
       /// Fallback page on fatal error
-      ErrorWidget.builder = (details) => Scaffold(
-            body: Center(child: Text("Error: $details")),
+      ErrorWidget.builder = (details) => Container(
+            child: Center(child: Text("Error: $details")),
           );
 
       runApp(const App());
@@ -36,15 +36,32 @@ main() {
   );
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({super.key});
 
   @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  var _count = 0;
+  @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () {
+              setState(() {
+                _count++;
+              });
+            }),
         body: Center(
-          child: Text('Hello World!'),
+          child: SizedBox(
+            child: Column(
+              children: [const Text('Counter'), Text("$_count")],
+            ),
+          ),
         ),
       ),
     );
