@@ -58,10 +58,12 @@ class _AppState extends State<App> {
                 _count++;
               });
             }),
-        body: Center(
-          child: SizedBox(
-            child: Column(
-              children: [Text('${country.flag()} Counter'), Text("$_count")],
+        body: SafeArea(
+          child: Center(
+            child: SizedBox(
+              child: Column(
+                children: [Text('${country.flag()} Counter'), Text("$_count")],
+              ),
             ),
           ),
         ),
