@@ -1,2 +1,2 @@
 # card_security_system
- A system that allows our admins to submit credit card numbers for validation
+ A system that allows admins to submit credit card numbers for validation.
