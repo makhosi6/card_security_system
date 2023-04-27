@@ -1,8 +1,13 @@
 import 'dart:async';
 
 import 'package:card_security_system/models/country.dart';
+import 'package:card_security_system/pages/cards_list_page.dart';
+import 'package:card_security_system/pages/country_config_page.dart';
+import 'package:card_security_system/provider/theme.dart';
+import 'package:card_security_system/utils/state_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,12 +22,17 @@ main() {
         }
       };
 
-      /// Fallback page on fatal error
+      // / Fallback page on fatal error
       ErrorWidget.builder = (details) => Scaffold(
             body: Center(child: Text("Error: $details")),
           );
 
-      runApp(const App());
+      runApp(MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => UserTheme()),
+        ],
+        child: StateManager(child: const App()),
+      ));
     },
     (error, _) {
       if (kDebugMode) {
@@ -45,29 +55,29 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  var country = const Country(code: "GB", name: "SATAFRIKA");
-  var _count = 0;
+  ///
+  var country = const Country(code: "ZA", name: "SATAFRIKA");
+
+  ///
+  final _count = 0;
+
+  ///user selected theme
+  ThemeData? theme;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () {
-              setState(() {
-                _count++;
-              });
-            }),
-        body: SafeArea(
-          child: Center(
-            child: SizedBox(
-              child: Column(
-                children: [Text('${country.flag()} Counter'), Text("$_count")],
-              ),
-            ),
-          ),
-        ),
-      ),
+      theme: Provider.of<UserTheme>(context).value,
+      home: const CardListPage(),
+      routes: {
+        '/': (context) => const CardListPage(),
+        ConfigCountriesPage.routeName: (context) => const ConfigCountriesPage()
+      },
     );
+  }
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
   }
 }
