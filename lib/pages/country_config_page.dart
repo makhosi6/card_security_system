@@ -12,8 +12,21 @@ class _ConfigCountriesPageState extends State<ConfigCountriesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: const Text("Countries"),
+      appBar: AppBar(
+        title: const Text("Select Banned Countries"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+              onPressed: () async {},
+              child: const Text('scan card'),
+            ),
+            const Text('oppo'),
+          ],
+        ),
+      ),
     );
   }
 }

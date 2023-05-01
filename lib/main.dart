@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:card_security_system/models/country.dart';
 import 'package:card_security_system/pages/cards_list_page.dart';
 import 'package:card_security_system/pages/country_config_page.dart';
+import 'package:card_security_system/pages/create_edit_card_page.dart';
+import 'package:card_security_system/provider/card_details.dart';
 import 'package:card_security_system/provider/theme.dart';
 import 'package:card_security_system/utils/state_manager.dart';
 import 'package:flutter/foundation.dart';
@@ -23,13 +25,14 @@ main() {
       };
 
       // / Fallback page on fatal error
-      ErrorWidget.builder = (details) => Scaffold(
-            body: Center(child: Text("Error: $details")),
-          );
+      // ErrorWidget.builder = (details) => Scaffold(
+      //       body: Center(child: Text("Error: $details")),
+      //     );
 
       runApp(MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => UserTheme()),
+          ChangeNotifierProvider(create: (_) => InferCardType()),
         ],
         child: StateManager(child: const App()),
       ));
@@ -66,18 +69,25 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    /// system theme and brightness
+    Brightness brightness =
+        MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+            .platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
+    ///get selected theme
+    ThemeData theme = (Provider.of<UserTheme>(context).value) ??
+        ((isDarkMode) ? darkTheme : lightTheme);
+
+    ///
     return MaterialApp(
-      theme: Provider.of<UserTheme>(context).value,
+      debugShowCheckedModeBanner: false,
+      theme: theme,
       home: const CardListPage(),
       routes: {
-        '/': (context) => const CardListPage(),
-        ConfigCountriesPage.routeName: (context) => const ConfigCountriesPage()
+        ConfigCountriesPage.routeName: (context) => const ConfigCountriesPage(),
+        CreateEditCard.routeName: (context) => const CreateEditCard()
       },
     );
-  }
-
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
   }
 }

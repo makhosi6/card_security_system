@@ -1,3 +1,4 @@
+import 'package:card_security_system/pages/create_edit_card_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -17,7 +18,9 @@ abstract class CustomFloatingActionButton {
   var childrenButtonSize = const Size(56.0, 56.0);
   var selectedfABLocation = FloatingActionButtonLocation.endDocked;
 
-  SpeedDial floatingActionButtonAsSpeedDial() => SpeedDial(
+  SpeedDial floatingActionButtonAsSpeedDial(BuildContext context,
+          {required Future<void> Function() scanCard}) =>
+      SpeedDial(
         overlayOpacity: 0.2,
         overlayColor: Colors.black,
         icon: Icons.add,
@@ -63,14 +66,17 @@ abstract class CustomFloatingActionButton {
             backgroundColor: const Color(0xFF21B7CA),
             foregroundColor: Colors.white,
             label: 'Input Card Details',
-            onTap: () => {},
+            onTap: () {
+              print('Input Card Details');
+              Navigator.pushNamed(context, CreateEditCard.routeName);
+            },
           ),
           SpeedDialChild(
             child: const Icon(Icons.qr_code_scanner_rounded),
             backgroundColor: const Color.fromARGB(255, 34, 93, 255),
             foregroundColor: Colors.white,
             label: 'Scan Card Details',
-            onTap: () => debugPrint('SECOND CHILD'),
+            onTap: scanCard,
           ),
         ],
       );
