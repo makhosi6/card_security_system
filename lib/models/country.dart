@@ -9,8 +9,10 @@ class Country {
 
   $toMap() => {"name": name, "code": code};
 
-  flag() => code.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'),
-      (match) => String.fromCharCode(match.group(0)!.codeUnitAt(0) + 127397));
+  String get flag {
+    return code.toUpperCase().replaceAllMapped(RegExp(r'[A-Z]'),
+        (match) => String.fromCharCode(match.group(0)!.codeUnitAt(0) + 127397));
+  }
 
   @override
   String toString() {
