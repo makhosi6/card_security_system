@@ -107,7 +107,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
                             Future.microtask(fetchIssuingCountry);
                           },
                           type: TextInputType.text,
-                          initialValue: "",
+                          initialValue: widget.cardDetails?.cardNumber,
                           hint: 'Type a valid Card Number',
                           label: 'Card Number',
                           inputLimit: 19, // (4*4) + 3
@@ -118,7 +118,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
                           setValue: (String value) {},
                           hint: 'Type Cardholder Name',
                           label: 'Cardholder Name',
-                          // initialValue: "Bob Marley",
+                          initialValue: widget.cardDetails?.cardHolderName,
                           type: TextInputType.name,
                         ),
 
@@ -140,10 +140,19 @@ class _CreateEditCardState extends State<CreateEditCard> {
                           },
                         ),
 
+                        /// Card expiryDate input field,
+                        _NamedTextInputWidget(
+                            setValue: (String value) {},
+                            hint: 'Expiry Date, i.e, 12/30',
+                            label: 'Expiry Date',
+                            initialValue: widget.cardDetails?.expiryDate,
+                            inputLimit: 5),
+
                         /// Card CVV input field,
                         _NamedTextInputWidget(
                             setValue: (String value) {},
                             hint: 'Type a valid CVV',
+                            initialValue: "",
                             label: 'CVV Number',
                             inputLimit: 4 // 3 to 4,
                             ),
@@ -324,20 +333,37 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
   @override
   void initState() {
     super.initState();
+    print("+=================================+");
     print("SET TO ${widget.initialValue}");
 
-    focusNode.addListener(() {
-      /// on focus event, update the parent, push the value up the tree
-      if (widget.label == 'Card Number') {
-        widget.setValue(inputController.value.text);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      focusNode.addListener(() {
+        /// on focus event, update the parent, push the value up the tree
+        if (widget.label == 'Card Number') {
+          widget.setValue(inputController.value.text);
+        }
+      });
+
+      /// is [widget.initialValue] a valid value
+      isValidated = validate(widget.initialValue) == null;
+
+      /// set initial value if available
+      if ((widget.initialValue != null || widget.initialValue != "")) {
+        inputController.text = "${widget.initialValue}";
+
+        if (widget.label == 'Card Number') {
+          /// And
+          ///  - broadcast type inferred card type using the card number
+          var types = detectCCType(widget.initialValue);
+
+          Provider.of<InferCardType>(context, listen: false).value = types.name;
+        }
+
+        ///Check the value, and then,
+        /// update the check icon to a green color for user confirmation
+        isValidated = validate("${widget.initialValue}") == null;
       }
     });
-
-    /// is [widget.initialValue] a valid value
-    isValidated = validate(widget.initialValue) == null;
-
-    /// set initial value if available
-    if (widget.initialValue != null) inputController.text = widget.initialValue;
   }
 
   ///
@@ -369,7 +395,7 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
           var value = input.replaceAll("-", "");
 
           /// onChange
-          ///  - brodcast type inferred card type using the card number
+          ///  - broAdcast type inferred card type using the card number
           if (value.isNotEmpty && widget.label == 'Card Number') {
             var types = detectCCType(value);
 

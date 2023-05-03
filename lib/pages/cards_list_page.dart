@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:card_security_system/pages/create_edit_card_page.dart';
 import 'package:card_security_system/utils/helpers.dart';
 import 'package:card_security_system/widgets/fab_helpers.dart';
 import 'package:card_security_system/widgets/settings_btn.dart';
@@ -43,6 +44,15 @@ class _CardListPageState extends State<CardListPage>
     setState(() {
       _cardDetails = cardDetails;
     });
+
+    /// Then navigate to the edit/create page
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CreateEditCard(
+            key: const Key("create-edit-card-details"),
+            cardDetails: cardDetails),
+      ),
+    );
   }
 
   @override
@@ -122,7 +132,7 @@ class __CardListItemState extends State<_CardListItem> {
               ),
               SlidableAction(
                 onPressed: (_) {
-                  print("onEdit ${splitNumber(widget.card.cardNumber)}");
+                  print("onEdit ${(widget.card.cardNumber)}");
                 },
                 backgroundColor: const Color(0xFF21B7CA),
                 foregroundColor: Colors.white,
@@ -136,7 +146,7 @@ class __CardListItemState extends State<_CardListItem> {
           // component is not dragged.
           child: ListTile(
             //card number
-            title: Text(widget.card.cardNumber),
+            title: Text(splitNumber(widget.card.cardNumber)),
 
             /// type
             subtitle: Text(widget.card.expiryDate),

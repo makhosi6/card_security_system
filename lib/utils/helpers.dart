@@ -53,8 +53,10 @@ Future<Map<String, dynamic>> getIssuingCountry(String cardNumber) async {
   }
 }
 
+/// Slipt bank card number for readability
+/// - 4by4
 String splitNumber(String val) {
-  if (val.isNotEmpty) return val;
+  if (val.length < 4) return val;
 
   var bufferString = StringBuffer();
   for (int i = 0; i < val.length; i++) {
