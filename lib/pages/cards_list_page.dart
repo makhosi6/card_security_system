@@ -52,6 +52,7 @@ class _CardListPageState extends State<CardListPage>
       floatingActionButton:
           floatingActionButtonAsSpeedDial(context, scanCard: scanCard),
       body: Container(
+        constraints: const BoxConstraints(maxWidth: 400.0),
         child: ListView.builder(
           itemCount: 5,
           itemBuilder: (context, index) {

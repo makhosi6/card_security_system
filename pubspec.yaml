@@ -16,6 +16,7 @@ dependencies:
   credit_card_type_detector: 
   credit_card_validator: ^2.0.1
   http: ^0.13.4
+  selectable_container: ^1.0.7
 
 dev_dependencies:
   flutter_test:

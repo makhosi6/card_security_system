@@ -64,15 +64,15 @@ class _CreateEditCardState extends State<CreateEditCard> {
 
   @override
   Widget build(BuildContext context) {
-    var isAndroid = TargetPlatform.android == defaultTargetPlatform;
-    var isDark = Theme.of(context).brightness == Brightness.dark;
-
     ///
     return WillPopScope(
       onWillPop: () async {
-        /// clear stale data as we dispose the page
-        Provider.of<InferCardType>(context, listen: false).value = "";
-
+        try {
+          /// clear stale data as we dispose the page
+          Provider.of<InferCardType>(context, listen: false).value = "";
+        } catch (e) {
+          print(e);
+        }
         return true;
       },
       child: Scaffold(
