@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:card_security_system/utils/helpers.dart';
 import 'package:card_security_system/widgets/fab_helpers.dart';
 import 'package:card_security_system/widgets/settings_btn.dart';
 import 'package:credit_card_scanner/credit_card_scanner.dart';
@@ -52,11 +55,14 @@ class _CardListPageState extends State<CardListPage>
       floatingActionButton:
           floatingActionButtonAsSpeedDial(context, scanCard: scanCard),
       body: Container(
+        padding: const EdgeInsets.only(bottom: 20.0),
         constraints: const BoxConstraints(maxWidth: 400.0),
         child: ListView.builder(
-          itemCount: 5,
+          itemCount: list.length,
           itemBuilder: (context, index) {
-            return const _ListItem();
+            return _CardListItem(
+              card: list[index],
+            );
           },
         ),
       ),
@@ -69,14 +75,15 @@ class _CardListPageState extends State<CardListPage>
   }
 }
 
-class _ListItem extends StatefulWidget {
-  const _ListItem();
+class _CardListItem extends StatefulWidget {
+  final CardDetails card;
+  const _CardListItem({required this.card});
 
   @override
-  State<_ListItem> createState() => __ListItemState();
+  State<_CardListItem> createState() => __CardListItemState();
 }
 
-class __ListItemState extends State<_ListItem> {
+class __CardListItemState extends State<_CardListItem> {
   @override
   Widget build(BuildContext context) {
     var isAndroid = TargetPlatform.android == defaultTargetPlatform;
@@ -105,14 +112,18 @@ class __ListItemState extends State<_ListItem> {
             dismissible: DismissiblePane(onDismissed: () {}),
             children: [
               SlidableAction(
-                onPressed: (_) {},
+                onPressed: (_) {
+                  print("onDelete  ${widget.card.cardNumber}");
+                },
                 backgroundColor: const Color(0xFFFE4A49),
                 foregroundColor: Colors.white,
                 icon: Icons.delete,
                 label: 'Delete',
               ),
               SlidableAction(
-                onPressed: (_) {},
+                onPressed: (_) {
+                  print("onEdit ${splitNumber(widget.card.cardNumber)}");
+                },
                 backgroundColor: const Color(0xFF21B7CA),
                 foregroundColor: Colors.white,
                 icon: Icons.edit,
@@ -125,21 +136,23 @@ class __ListItemState extends State<_ListItem> {
           // component is not dragged.
           child: ListTile(
             //card number
-            title: const Text('5593 7219 5084 9284'),
+            title: Text(widget.card.cardNumber),
 
             /// type
-            subtitle: const Text("12/30"),
+            subtitle: Text(widget.card.expiryDate),
 
             /// expiration data
             trailing: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: const [
-                Text(
+              children: [
+                const Text(
                   "🇦🇪",
                   style: TextStyle(fontSize: 22.0),
                 ),
-                Text('Visa'),
+                Text(
+                  issuers[Random().nextInt(13)].toUpperCase(),
+                ),
               ],
             ),
             dense: false,
@@ -149,3 +162,14 @@ class __ListItemState extends State<_ListItem> {
     );
   }
 }
+
+var issuers = CardIssuer.values.map((e) => e.name).toList();
+var list = List.generate(
+    20,
+    (index) => CardDetails.fromMap({
+          'cardNumber': "${Random().nextInt(9018) + 1000}890278230972",
+          'cardIssuer': issuers[Random().nextInt(13)],
+          'cardHolderName': "J Wick",
+          'expiryDate': "$index/30",
+        }))
+  ..sort((a, b) => int.parse(b.cardNumber) - int.parse(a.cardNumber));

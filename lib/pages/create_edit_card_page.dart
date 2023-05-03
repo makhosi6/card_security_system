@@ -1,6 +1,7 @@
 import 'package:card_security_system/models/country.dart';
 import 'package:card_security_system/provider/card_details.dart';
 import 'package:card_security_system/utils/helpers.dart';
+import 'package:card_security_system/widgets/settings_btn.dart';
 import 'package:credit_card_scanner/credit_card_scanner.dart';
 import 'package:credit_card_type_detector/credit_card_type_detector.dart';
 import 'package:flutter/foundation.dart';
@@ -78,6 +79,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Create or Update Card"),
+          actions: const [SettingsButton()],
         ),
         body: Container(
           child: SingleChildScrollView(
@@ -104,6 +106,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
                             ///and fetch issuing country, if necessary
                             Future.microtask(fetchIssuingCountry);
                           },
+                          type: TextInputType.text,
                           initialValue: "",
                           hint: 'Type a valid Card Number',
                           label: 'Card Number',
@@ -124,6 +127,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
                           valueListenable: ValueNotifier(
                               Provider.of<InferCardType>(context).value),
                           builder: (context, value, child) {
+                            print("CARD_TYPES: $value");
                             return _NamedTextInputWidget(
                               key: Key("$value"),
                               readOnly: true,
@@ -361,7 +365,9 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
           border: const OutlineInputBorder(),
         ),
         controller: inputController,
-        onChanged: (value) {
+        onChanged: (input) {
+          var value = input.replaceAll("-", "");
+
           /// onChange
           ///  - brodcast type inferred card type using the card number
           if (value.isNotEmpty && widget.label == 'Card Number') {
@@ -382,7 +388,17 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
           (widget.type == TextInputType.number || widget.type == null)
               ? FilteringTextInputFormatter.digitsOnly
               : FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
-          LengthLimitingTextInputFormatter(widget.inputLimit)
+          LengthLimitingTextInputFormatter(widget.inputLimit),
+
+          /// Formatter for the card number only
+          /// - separate card number by 4*4 for readability
+          /// - and deny letters
+          if (widget.label == 'Card Number')
+            BankCardNumberFormatter(
+              mask: 'xxxx-xxxx-xxxx-xxxx',
+              separator: '-',
+            ),
+          FilteringTextInputFormatter.deny(RegExp(r'[a-zA-Z]')),
         ],
         validator: validate,
       ),

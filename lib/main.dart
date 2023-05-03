@@ -83,6 +83,7 @@ class _AppState extends State<App> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: theme,
+      title: "Card Security System",
       home: const CardListPage(),
       routes: {
         ConfigCountriesPage.routeName: (context) => const ConfigCountriesPage(),

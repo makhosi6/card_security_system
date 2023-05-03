@@ -59,7 +59,7 @@ jobs:
           flutter-version: ${{env.FLUTTER_VERSION}}
       - run: flutter pub get
       - run: flutter clean
-      - run: flutter build apk --release
+      - run: flutter build apk --release 
       - uses: ncipollo/release-action@v1
         with:
          artifacts: "build/app/outputs/flutter-apk/*.apk"
