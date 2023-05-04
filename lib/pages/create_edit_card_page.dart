@@ -348,7 +348,10 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
       isValidated = validate(widget.initialValue) == null;
 
       /// set initial value if available
-      if ((widget.initialValue != null || widget.initialValue != "")) {
+      if ((widget.initialValue != null && widget.initialValue != "")) {
+        print("==================================");
+        print("${widget.initialValue} ${widget.initialValue.runtimeType}");
+        print("==================================");
         inputController.text = "${widget.initialValue}";
 
         if (widget.label == 'Card Number') {
@@ -384,6 +387,11 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
           constraints: const BoxConstraints(maxWidth: 400.0),
           hintText: widget.hint ?? "Please type...",
           labelText: widget.label,
+          prefixIcon: (widget.label == 'Card Number')
+              ? InkWell(
+                  onTap: () {},
+                  child: const Icon(Icons.qr_code_scanner_outlined))
+              : null,
           suffixIcon: Icon(
             isValidated ? Icons.check_circle : Icons.error,
             color: isValidated ? Colors.greenAccent[400] : Colors.grey,

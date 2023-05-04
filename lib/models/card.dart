@@ -1,40 +1,43 @@
-import 'package:card_security_system/models/country.dart';
+import 'package:card_security_system/models/boxes.dart';
+import 'package:hive/hive.dart';
 
-class Card {
-  Card(
-      {required this.number,
-      required this.expiration,
-      required this.countryCode,
-      required this.holder,
-      this.type = "credit"}) {
-    //set uuid
-    _key = number.hashCode.toString();
-  }
-  String number;
+@HiveType(typeId: 1)
+class Card extends HiveObject {
+  ///
+  @HiveField(1)
+  String? cardNumber;
 
-  late String _key;
+  @HiveField(2)
+  String? placeHolder;
 
-  String expiration;
+  @HiveField(3)
+  String? cardType;
 
-  String? type;
+  @HiveField(4)
+  String? expiry;
 
-  String countryCode;
+  @HiveField(5)
+  String? cvvNumber;
 
-  Country holder;
+  @HiveField(6)
+  String? country;
 
-//// clear record
-  Future<bool> delete() async {
-// use [_key] to delete a record from localstorage
+  saveCard(Map<String, dynamic> card) {
+    ///
+    var box = Boxes.getCards();
 
-    return _key == "";
-  }
+    var toStore = Card()
+      ..cardNumber = ""
+      ..cardType = "";
 
-  /// update | insert record
-  Future<bool> upsert() async {
-// use [_key] to delete a record from localstorage
-
-    return _key == "";
+    ///
+    box.put(card["cardNumber"], toStore);
   }
 
-  $toMap() {}
+  Future<void> deleteCard(String key) => Boxes.getCards().delete(key);
+
+  @override
+  String toString() {
+    return "";
+  }
 }
