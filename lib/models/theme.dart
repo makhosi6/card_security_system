@@ -1,5 +1,6 @@
 import 'package:card_security_system/models/boxes.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+part 'theme.g.dart';
 
 @HiveType(typeId: 3)
 class AppTheme extends HiveObject {
@@ -8,6 +9,7 @@ class AppTheme extends HiveObject {
   String? theme;
 
   /// to save or to update the Theme
+  /// - theme, i.e "dark" | "light"
   saveData(String theme) {
     /// get the box
     var box = Boxes.getThemeData();

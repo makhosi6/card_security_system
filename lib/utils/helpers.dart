@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:credit_card_scanner/models/card_scan_options.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
@@ -68,3 +69,17 @@ String splitNumber(String val) {
   }
   return bufferString.toString();
 }
+
+///
+CardScanOptions scanOptions = const CardScanOptions(
+  scanExpiryDate: true,
+  scanCardHolderName: true,
+  enableDebugLogs: true,
+  validCardsToScanBeforeFinishingScan: 5,
+  considerPastDatesInExpiryDateScan: true,
+  // enableLuhnCheck: true,
+  possibleCardHolderNamePositions: [
+    CardHolderNameScanPosition.aboveCardNumber,
+    CardHolderNameScanPosition.belowCardNumber,
+  ],
+);

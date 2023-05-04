@@ -1,3 +1,4 @@
+import 'package:card_security_system/models/theme.dart';
 import 'package:card_security_system/pages/country_config_page.dart';
 import 'package:card_security_system/provider/theme.dart';
 import 'package:flutter/material.dart';
@@ -80,9 +81,17 @@ class SettingsButton extends StatelessWidget {
 
     /// toggle between dark & light mode
     if (userTheme.value == darkTheme) {
+      /// update provider and trigger UI update
       userTheme.value = lightTheme;
+
+      /// save the option on a persistent storage
+      AppTheme().saveData('light');
     } else {
+      /// update provider and trigger UI update
       userTheme.value = darkTheme;
+
+      /// save the option on a persistent storage
+      AppTheme().saveData('dark');
     }
   }
 

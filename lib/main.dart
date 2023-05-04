@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:card_security_system/models/banned_countries.dart';
+import 'package:card_security_system/models/card.dart';
 import 'package:card_security_system/models/country.dart';
+import 'package:card_security_system/models/theme.dart';
 import 'package:card_security_system/pages/cards_list_page.dart';
 import 'package:card_security_system/pages/country_config_page.dart';
 import 'package:card_security_system/pages/create_edit_card_page.dart';
@@ -9,10 +12,25 @@ import 'package:card_security_system/provider/theme.dart';
 import 'package:card_security_system/utils/state_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
-main() {
+main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  ///
+  await Hive.initFlutter();
+  Hive.registerAdapter(AppThemeAdapter());
+  Hive.registerAdapter(BannedCountryAdapter());
+  Hive.registerAdapter(BankCardAdapter());
+
+  ///
+  await Hive.openBox<AppTheme>("app_theme",
+      compactionStrategy: (_, deleted) => deleted > 0);
+  await Hive.openBox<BannedCountry>('banned_countries',
+      compactionStrategy: (_, deleted) => deleted > 0);
+  await Hive.openBox<BankCard>('bank_cards',
+      compactionStrategy: (_, deleted) => deleted > 0);
 
   /// Error zone of the App body
   runZonedGuarded<void>(

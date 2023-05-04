@@ -1,14 +1,16 @@
 import 'package:card_security_system/models/boxes.dart';
 import 'package:hive/hive.dart';
 
+part 'card.g.dart';
+
 @HiveType(typeId: 1)
-class Card extends HiveObject {
+class BankCard extends HiveObject {
   ///
   @HiveField(1)
   String? cardNumber;
 
   @HiveField(2)
-  String? placeHolder;
+  String? cardHolder;
 
   @HiveField(3)
   String? cardType;
@@ -26,9 +28,13 @@ class Card extends HiveObject {
     ///
     var box = Boxes.getCards();
 
-    var toStore = Card()
-      ..cardNumber = ""
-      ..cardType = "";
+    var toStore = BankCard()
+      ..cardNumber = card["cardNumber"]
+      ..cardHolder = card['cardHolder']
+      ..cardType = card["cardType"]
+      ..expiry = card["expiry"]
+      ..cvvNumber = card["cvvNumber"]
+      ..country = card["country"];
 
     ///
     box.put(card["cardNumber"], toStore);

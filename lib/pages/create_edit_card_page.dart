@@ -1,3 +1,4 @@
+import 'package:card_security_system/models/card.dart';
 import 'package:card_security_system/models/country.dart';
 import 'package:card_security_system/provider/card_details.dart';
 import 'package:card_security_system/utils/helpers.dart';
@@ -27,16 +28,21 @@ class CreateEditCard extends StatefulWidget {
 
 class _CreateEditCardState extends State<CreateEditCard> {
   /// value received from the child input field [Card number], as a String because [TextFormField] returns Strings only
-  String _cardNumber = "";
+  String cardNumber = "";
 
   /// value received from the child input field [Cardholder Name], as a String because [TextFormField] returns Strings only
-  final String _cardHolder = "";
+// ignore: prefer_final_fields
+  String cardHolder = "";
 
   /// value received from the child input field [Card type], as a String because [TextFormField] returns Strings only
-  final String _cardType = "";
+  // ignore: prefer_final_fields
+  String cardType = "";
 
   /// value received from the child input field [CVV number], as a String because [TextFormField] returns Strings only
-  final String _cvvNumber = "";
+  // ignore: prefer_final_fields
+  String cvvNumber = "";
+  // ignore: prefer_final_fields
+  String cardExpiry = "";
 
   /// a [Country] object, received from the [binlist.net] API via the [fetchIssuingCountry] function, calculated using the first 6 digits of a credit card number
   /// - Requests are throttled at 10 per minute
@@ -48,7 +54,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
     try {
       print("Update country");
       var issuingCountry =
-          _cardNumber.isNotEmpty ? await getIssuingCountry(_cardNumber) : null;
+          cardNumber.isNotEmpty ? await getIssuingCountry(cardNumber) : null;
 
       if (issuingCountry != null && issuingCountry.isNotEmpty && mounted) {
         print("Update country");
@@ -99,7 +105,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
 
                             if (mounted) {
                               setState(() {
-                                _cardNumber = value;
+                                cardNumber = value.replaceAll("-", "");
                               });
                             }
 
@@ -115,11 +121,18 @@ class _CreateEditCardState extends State<CreateEditCard> {
 
                         /// cardholder name input field
                         _NamedTextInputWidget(
-                          setValue: (String value) {},
+                          setValue: (String value) {
+                            print("CARDHOLDER||| $value");
+                            if (mounted) {
+                              setState(() {
+                                cardHolder = value;
+                              });
+                            }
+                          },
                           hint: 'Type Cardholder Name',
                           label: 'Cardholder Name',
                           initialValue: widget.cardDetails?.cardHolderName,
-                          type: TextInputType.name,
+                          type: TextInputType.text,
                         ),
 
                         /// Card type input field, listens for changes from the [InferCardType] provider and acts accordingly
@@ -131,7 +144,13 @@ class _CreateEditCardState extends State<CreateEditCard> {
                             return _NamedTextInputWidget(
                               key: Key("$value"),
                               readOnly: true,
-                              setValue: (String value) {},
+                              setValue: (String value) {
+                                if (mounted) {
+                                  setState(() {
+                                    cardType = value;
+                                  });
+                                }
+                              },
                               hint: 'Type a Card type, i.e, Visa',
                               label: 'Card Type (read only)',
                               initialValue: value,
@@ -142,7 +161,14 @@ class _CreateEditCardState extends State<CreateEditCard> {
 
                         /// Card expiryDate input field,
                         _NamedTextInputWidget(
-                            setValue: (String value) {},
+                            setValue: (String value) {
+                              if (mounted) {
+                                setState(() {
+                                  cardExpiry = value;
+                                });
+                              }
+                            },
+                            type: TextInputType.text,
                             hint: 'Expiry Date, i.e, 12/30',
                             label: 'Expiry Date',
                             initialValue: widget.cardDetails?.expiryDate,
@@ -150,7 +176,13 @@ class _CreateEditCardState extends State<CreateEditCard> {
 
                         /// Card CVV input field,
                         _NamedTextInputWidget(
-                            setValue: (String value) {},
+                            setValue: (String value) {
+                              if (mounted) {
+                                setState(() {
+                                  cvvNumber = value;
+                                });
+                              }
+                            },
                             hint: 'Type a valid CVV',
                             initialValue: "",
                             label: 'CVV Number',
@@ -240,15 +272,38 @@ class _CreateEditCardState extends State<CreateEditCard> {
                               ),
                             ),
                             onPressed: () {
+                              print(
+                                  "$cardNumber  | $cardExpiry | $cardHolder | $cvvNumber | ${country?.flag} | $cardType");
+
                               /// check if form is filled correctly
                               if (_formKey.currentState!.validate()) {
                                 /// then save
                                 _formKey.currentState?.save();
                               }
 
-                              // and clear the form
+                              ///data
+                              var data = {
+                                "cardNumber": cardNumber,
+                                "cardHolder": cardHolder,
+                                "cardType": cardType,
+                                "expiry": cardExpiry,
+                                "cvvNumber": cvvNumber,
+                                "country": country?.code
+                              };
 
-                              //then navigate away
+                              /// save store the data
+                              BankCard().saveCard(data);
+                              // and clear the form
+                              _formKey.currentState?.reset();
+
+                              /// show a snackbar confirmation to the user
+
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                backgroundColor: Colors.greenAccent[400],
+                                content: const Text(
+                                    'A new bank card has been added!'),
+                              ));
                             },
                             style: ButtonStyle(
                               padding: MaterialStateProperty.all(
@@ -278,6 +333,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
 
   @override
   void dispose() {
+    _formKey.currentState?.dispose();
     super.dispose();
   }
 }
@@ -370,6 +426,25 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
   }
 
   ///
+  Future<void> scanCard() async {
+    var cardDetails = await CardScanner.scanCard(scanOptions: scanOptions);
+
+    if (!mounted) return;
+
+    /// Then navigate to the edit/create page
+    if (cardDetails != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => CreateEditCard(
+            key: UniqueKey(),
+            cardDetails: cardDetails,
+          ),
+        ),
+      );
+    }
+  }
+
+  ///
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -387,11 +462,11 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
           constraints: const BoxConstraints(maxWidth: 400.0),
           hintText: widget.hint ?? "Please type...",
           labelText: widget.label,
-          prefixIcon: (widget.label == 'Card Number')
-              ? InkWell(
-                  onTap: () {},
-                  child: const Icon(Icons.qr_code_scanner_outlined))
-              : null,
+          // prefixIcon: (widget.label == 'Card Number')
+          //     ? InkWell(
+          //         onTap: scanCard,
+          //         child: const Icon(Icons.qr_code_scanner_outlined))
+          //     : null,
           suffixIcon: Icon(
             isValidated ? Icons.check_circle : Icons.error,
             color: isValidated ? Colors.greenAccent[400] : Colors.grey,
@@ -419,9 +494,9 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
         },
         keyboardType: widget.type ?? TextInputType.number,
         inputFormatters: <TextInputFormatter>[
-          (widget.type == TextInputType.number || widget.type == null)
-              ? FilteringTextInputFormatter.digitsOnly
-              : FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
+          if (widget.type == TextInputType.number || widget.type == null)
+            FilteringTextInputFormatter.digitsOnly,
+          // : FilteringTextInputFormatter.allow(r'[a-zA-Z]'),
           LengthLimitingTextInputFormatter(widget.inputLimit),
 
           /// Formatter for the card number only
@@ -432,7 +507,8 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
               mask: 'xxxx-xxxx-xxxx-xxxx',
               separator: '-',
             ),
-          FilteringTextInputFormatter.deny(RegExp(r'[a-zA-Z]')),
+          if (widget.label == 'Card Number')
+            FilteringTextInputFormatter.deny(RegExp(r'[a-zA-Z]')),
         ],
         validator: validate,
       ),

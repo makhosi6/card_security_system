@@ -1,6 +1,8 @@
 import 'package:card_security_system/models/boxes.dart';
 import 'package:hive/hive.dart';
 
+part 'banned_countries.g.dart';
+
 @HiveType(typeId: 2)
 class BannedCountry extends HiveObject {
   ///
