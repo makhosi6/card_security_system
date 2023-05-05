@@ -19,7 +19,7 @@ class SettingsButton extends StatelessWidget {
               var activeColor =
                   Provider.of<UserTheme>(context, listen: false).value ==
                           ThemeData.dark()
-                      ? const Color(0xFF64FFDA)
+                      ? const Color.fromARGB(255, 100, 255, 218)
                       : Theme.of(context).colorScheme.primary;
 
               ///

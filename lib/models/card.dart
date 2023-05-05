@@ -24,6 +24,9 @@ class BankCard extends HiveObject {
   @HiveField(6)
   String? country;
 
+  @HiveField(7)
+  int? lastUpdate;
+
   saveCard(Map<String, dynamic> card) {
     ///
     var box = Boxes.getCards();
@@ -34,7 +37,8 @@ class BankCard extends HiveObject {
       ..cardType = card["cardType"]
       ..expiry = card["expiry"]
       ..cvvNumber = card["cvvNumber"]
-      ..country = card["country"];
+      ..country = card["country"]
+      ..lastUpdate = DateTime.now().millisecondsSinceEpoch;
 
     ///
     box.put(card["cardNumber"], toStore);

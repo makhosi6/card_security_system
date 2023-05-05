@@ -47,25 +47,16 @@ class _CardListPageState extends State<CardListPage>
     }
   }
 
-  var lipd = 0;
   @override
   void initState() {
     super.initState();
-    Boxes.getCards().listenable().addListener(() {
-      if (mounted) {
-        setState(() {
-          lipd = Boxes.getCards().keys.length;
-        });
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text("${Boxes.getCards().keys.length} $lipd Bank Card Manager App"),
+        title: const Text("Bank Card Manager App"),
         actions: const [SettingsButton()],
       ),
       floatingActionButton:
@@ -76,11 +67,29 @@ class _CardListPageState extends State<CardListPage>
         child: ValueListenableBuilder(
             valueListenable: Boxes.getCards().listenable(),
             builder: (context, box, child) {
+              /// sort the cards list by [lastUpdate] timestamp
+              var cards = box.values.toList()
+                ..sort((a, b) => (b.lastUpdate ?? 0) - (a.lastUpdate ?? 0));
+
+              /// placeholder card if [cards] is empty
+              if (cards.isEmpty) {
+                cards = [
+                  BankCard()
+                    ..cardHolder = "Placeholder Card"
+                    ..cardNumber = "0000000000000000"
+                    ..country = "ZA"
+                    ..cvvNumber = "234"
+                    ..expiry = "01/23"
+                    ..lastUpdate = DateTime.now().millisecondsSinceEpoch
+                ];
+              }
+
+              ///
               return ListView.builder(
-                itemCount: box.keys.length,
+                itemCount: cards.length,
                 itemBuilder: (context, index) {
                   return _CardListItem(
-                    card: box.values.elementAt(index),
+                    card: cards.elementAt(index),
                   );
                 },
               );
@@ -124,7 +133,7 @@ class __CardListItemState extends State<_CardListItem> {
         border: isAndroid
             ? isDark
                 ? Border.all(color: const Color.fromARGB(255, 143, 137, 137))
-                : Border.all(color: const Color.fromARGB(255, 165, 212, 250))
+                : Border.all(color: const Color.fromARGB(168, 62, 65, 255))
             : null,
       ),
       clipBehavior: Clip.hardEdge,
@@ -161,16 +170,30 @@ class __CardListItemState extends State<_CardListItem> {
           // The child of the Slidable is what the user sees when the
           // component is not dragged.
           child: ListTile(
+            isThreeLine: true,
             //card number
             title: Text((widget.card.cardNumber ?? "NO CARD NUMBER")),
 
             /// type
-            subtitle: Text("${widget.card.expiry}"),
+            subtitle: SizedBox(
+              height: 37.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("${widget.card.expiry}"),
+                  Text(
+                    "${widget.card.cardHolder}",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
 
             /// expiration data
             trailing: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   country.flag,

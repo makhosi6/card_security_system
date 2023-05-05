@@ -27,11 +27,24 @@ class UserTheme with ChangeNotifier {
   }
 }
 
-var defaultTheme =
-    ThemeData(useMaterial3: TargetPlatform.iOS == defaultTargetPlatform);
+/// is it a iOS device
+var isApple = TargetPlatform.iOS == defaultTargetPlatform;
 
-var lightTheme =
-    ThemeData.light(useMaterial3: TargetPlatform.iOS == defaultTargetPlatform);
+/// default theme
+var defaultTheme = ThemeData(
+    colorScheme:
+        isApple ? ColorScheme.fromSwatch(primarySwatch: Colors.indigo) : null,
+    primarySwatch: !isApple ? Colors.indigo : null,
+    primaryColor: !isApple ? Colors.indigo : null,
+    useMaterial3: isApple);
 
-var darkTheme =
-    ThemeData.dark(useMaterial3: TargetPlatform.iOS == defaultTargetPlatform);
+/// default light theme
+var lightTheme = ThemeData.light(useMaterial3: isApple).copyWith(
+    colorScheme:
+        !isApple ? ColorScheme.fromSwatch(primarySwatch: Colors.indigo) : null,
+    // primarySwatch: isApple ? Colors.indigo : null,
+    primaryColor: !isApple ? Colors.indigo : null,
+    useMaterial3: isApple);
+
+/// default dark theme
+var darkTheme = ThemeData.dark(useMaterial3: isApple);

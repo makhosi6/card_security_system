@@ -1,3 +1,4 @@
+import 'package:card_security_system/models/boxes.dart';
 import 'package:card_security_system/models/card.dart';
 import 'package:card_security_system/models/country.dart';
 import 'package:card_security_system/provider/card_details.dart';
@@ -203,8 +204,9 @@ class _CreateEditCardState extends State<CreateEditCard> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SizedBox(
+                                Container(
                                   width: 270.0,
+                                  padding: const EdgeInsets.only(left: 50.0),
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -263,10 +265,14 @@ class _CreateEditCardState extends State<CreateEditCard> {
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: TextButton.icon(
-                            icon: const Icon(Icons.send),
+                            icon: const Icon(
+                              Icons.save,
+                              color: Colors.white,
+                            ),
                             label: const Text(
-                              "Submit",
+                              "Save",
                               style: TextStyle(
+                                color: Colors.white,
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -277,35 +283,55 @@ class _CreateEditCardState extends State<CreateEditCard> {
 
                               /// check if form is filled correctly
                               if (_formKey.currentState!.validate()) {
-                                /// then save
-                                _formKey.currentState?.save();
+                                /// dismiss the keyboard
+                                FocusManager.instance.primaryFocus?.unfocus();
+
+                                /// if the form is validated check if the card exits before saving the data
+                                if (Boxes.getCards().get(cardNumber) != null) {
+                                  ScaffoldMessenger.of(context)
+                                    ..clearSnackBars()
+                                    ..showSnackBar(SnackBar(
+                                      backgroundColor: Colors.red[400],
+                                      content: Text(
+                                        'Card $cardNumber exists already',
+                                      ),
+                                    ));
+
+                                  return;
+                                }
+
+                                ///data as a Map
+                                var data = {
+                                  "cardNumber": cardNumber,
+                                  "cardHolder": cardHolder,
+                                  "cardType": cardType,
+                                  "expiry": cardExpiry,
+                                  "cvvNumber": cvvNumber,
+                                  "country": country?.code
+                                };
+
+                                /// save store the data
+                                BankCard().saveCard(data);
+                                // and clear the form
+                                _formKey.currentState
+                                  ?..save()
+                                  ..reset();
+
+                                /// show a snackbar confirmation to the user
+
+                                ScaffoldMessenger.of(context)
+                                  ..clearSnackBars()
+                                  ..showSnackBar(SnackBar(
+                                    backgroundColor: Colors.greenAccent[400],
+                                    content: const Text(
+                                      'A new bank card has been added!',
+                                    ),
+                                  ));
                               }
-
-                              ///data
-                              var data = {
-                                "cardNumber": cardNumber,
-                                "cardHolder": cardHolder,
-                                "cardType": cardType,
-                                "expiry": cardExpiry,
-                                "cvvNumber": cvvNumber,
-                                "country": country?.code
-                              };
-
-                              /// save store the data
-                              BankCard().saveCard(data);
-                              // and clear the form
-                              _formKey.currentState?.reset();
-
-                              /// show a snackbar confirmation to the user
-
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                backgroundColor: Colors.greenAccent[400],
-                                content: const Text(
-                                    'A new bank card has been added!'),
-                              ));
                             },
                             style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).primaryColor),
                               padding: MaterialStateProperty.all(
                                 const EdgeInsets.only(
                                   top: 5.0,
@@ -314,8 +340,6 @@ class _CreateEditCardState extends State<CreateEditCard> {
                                   right: 22.0,
                                 ),
                               ),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.white),
                             ),
                           ),
                         )
@@ -408,6 +432,7 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
         print("==================================");
         print("${widget.initialValue} ${widget.initialValue.runtimeType}");
         print("==================================");
+
         inputController.text = "${widget.initialValue}";
 
         if (widget.label == 'Card Number') {
@@ -493,7 +518,7 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
           });
         },
         keyboardType: widget.type ?? TextInputType.number,
-        inputFormatters: <TextInputFormatter>[
+        inputFormatters: [
           if (widget.type == TextInputType.number || widget.type == null)
             FilteringTextInputFormatter.digitsOnly,
           // : FilteringTextInputFormatter.allow(r'[a-zA-Z]'),
@@ -522,7 +547,14 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
     if (kDebugMode) {
       print("Value From ${widget.label} | $value");
     }
+
+    if (value != null && value.isNotEmpty) widget.setValue(value);
+
     if (value == null || value.isEmpty) {
+      /// hint for the card Type | Card Issuer field
+      if (widget.label == 'Card Type (read only)') {
+        return "The provided card number is not from a valid card issuer, please type a correct card number";
+      }
       return widget.hint;
     }
 
@@ -600,3 +632,53 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
     super.dispose();
   }
 }
+
+
+
+// WillPopScope(
+//         onWillPop: () async {
+//           print("$formSaved ==> ${[
+//             cardType,
+//             cardNumber,
+//             cardHolder,
+//             cvvNumber,
+//             cardExpiry
+//           ].every((e) => (e == "" || e.isEmpty))}");
+
+//           /// check if all elements are empty or if the form has been saved
+//           if (formSaved ||
+//               ([cardType, cardNumber, cardHolder, cvvNumber, cardExpiry]
+//                   .every((e) => (e == "" || e.isEmpty)))) {
+//             return true;
+//           }
+
+//           return await showDialog(
+//             context: context,
+//             builder: (context) {
+//               return AlertDialog(
+//                 title: const Text(
+//                   "If you leave before saving, your changes will be lost.",
+//                   style: TextStyle(fontSize: 18.0),
+//                 ),
+//                 actions: [
+//                   TextButton(
+//                     onPressed: () {
+//                       Navigator.of(context).pop(false);
+//                     },
+//                     child: const Text("Cancel"),
+//                   ),
+//                   TextButton(
+//                     child: const Text(
+//                       "Leave",
+//                       style: TextStyle(color: Colors.redAccent),
+//                     ),
+//                     onPressed: () {
+//                       Navigator.of(context).pop(true);
+//                     },
+//                   )
+//                 ],
+//               );
+//             },
+//           );
+//         },
+//         child:  );
