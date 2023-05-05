@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:credit_card_scanner/models/card_scan_options.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
@@ -83,3 +84,15 @@ CardScanOptions scanOptions = const CardScanOptions(
     CardHolderNameScanPosition.belowCardNumber,
   ],
 );
+
+MaterialBanner editOnlyMaterialBanner(BuildContext context) => MaterialBanner(
+      backgroundColor: Colors.grey,
+      content: const Text('You can\'t edit the card number.'),
+      leading: const Icon(Icons.edit_off_rounded),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {},
+          child: const Text(''),
+        ),
+      ],
+    );

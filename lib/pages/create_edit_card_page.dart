@@ -72,12 +72,26 @@ class _CreateEditCardState extends State<CreateEditCard> {
 
   @override
   Widget build(BuildContext context) {
+    /// on edit mode, get the stored record
+    var card = Boxes.getCards().get(cardNumber);
+
+    /// next tick callback
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      /// show edit only banner
+      if (card?.editing == true) {
+        ScaffoldMessenger.of(context)
+            .showMaterialBanner(editOnlyMaterialBanner(context));
+      }
+    });
+
     ///
     return WillPopScope(
       onWillPop: () async {
         try {
           /// clear stale data as we dispose the page
           Provider.of<InferCardType>(context, listen: false).value = "";
+          //close the Snackbar/MaterialBanner
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
         } catch (e) {
           print(e);
         }
@@ -113,6 +127,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
                             ///and fetch issuing country, if necessary
                             Future.microtask(fetchIssuingCountry);
                           },
+                          readOnly: card?.editing == true,
                           type: TextInputType.text,
                           initialValue: widget.cardDetails?.cardNumber,
                           hint: 'Type a valid Card Number',
@@ -287,13 +302,18 @@ class _CreateEditCardState extends State<CreateEditCard> {
                                 FocusManager.instance.primaryFocus?.unfocus();
 
                                 /// if the form is validated check if the card exits before saving the data
-                                if (Boxes.getCards().get(cardNumber) != null) {
+                                /// and if the [editing] value is true
+                                if (Boxes.getCards().get(cardNumber) != null &&
+                                    Boxes.getCards().get(cardNumber)?.editing !=
+                                        true) {
                                   ScaffoldMessenger.of(context)
                                     ..clearSnackBars()
+                                    ..clearMaterialBanners()
                                     ..showSnackBar(SnackBar(
                                       backgroundColor: Colors.red[400],
                                       content: Text(
                                         'Card $cardNumber exists already',
+                                        textAlign: TextAlign.center,
                                       ),
                                     ));
 
@@ -320,11 +340,13 @@ class _CreateEditCardState extends State<CreateEditCard> {
                                 /// show a snackbar confirmation to the user
 
                                 ScaffoldMessenger.of(context)
+                                  ..clearMaterialBanners()
                                   ..clearSnackBars()
                                   ..showSnackBar(SnackBar(
                                     backgroundColor: Colors.greenAccent[400],
                                     content: const Text(
-                                      'A new bank card has been added!',
+                                      'A bank card has been added/updated successfully!',
+                                      textAlign: TextAlign.center,
                                     ),
                                   ));
                               }
@@ -357,7 +379,6 @@ class _CreateEditCardState extends State<CreateEditCard> {
 
   @override
   void dispose() {
-    _formKey.currentState?.dispose();
     super.dispose();
   }
 }
@@ -632,53 +653,3 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
     super.dispose();
   }
 }
-
-
-
-// WillPopScope(
-//         onWillPop: () async {
-//           print("$formSaved ==> ${[
-//             cardType,
-//             cardNumber,
-//             cardHolder,
-//             cvvNumber,
-//             cardExpiry
-//           ].every((e) => (e == "" || e.isEmpty))}");
-
-//           /// check if all elements are empty or if the form has been saved
-//           if (formSaved ||
-//               ([cardType, cardNumber, cardHolder, cvvNumber, cardExpiry]
-//                   .every((e) => (e == "" || e.isEmpty)))) {
-//             return true;
-//           }
-
-//           return await showDialog(
-//             context: context,
-//             builder: (context) {
-//               return AlertDialog(
-//                 title: const Text(
-//                   "If you leave before saving, your changes will be lost.",
-//                   style: TextStyle(fontSize: 18.0),
-//                 ),
-//                 actions: [
-//                   TextButton(
-//                     onPressed: () {
-//                       Navigator.of(context).pop(false);
-//                     },
-//                     child: const Text("Cancel"),
-//                   ),
-//                   TextButton(
-//                     child: const Text(
-//                       "Leave",
-//                       style: TextStyle(color: Colors.redAccent),
-//                     ),
-//                     onPressed: () {
-//                       Navigator.of(context).pop(true);
-//                     },
-//                   )
-//                 ],
-//               );
-//             },
-//           );
-//         },
-//         child:  );

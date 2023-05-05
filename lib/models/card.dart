@@ -27,6 +27,23 @@ class BankCard extends HiveObject {
   @HiveField(7)
   int? lastUpdate;
 
+  /// is the card being edited
+  @HiveField(8)
+  bool? editing;
+
+  /// set the card's status to editing mode
+  void setToEditingMode() async {
+    var box = Boxes.getCards();
+
+    var card = box.get(cardNumber);
+
+    card
+      ?..editing = true
+      ..cardHolder = cardHolder!;
+
+    if (card != null) await box.put(cardNumber, card);
+  }
+
   saveCard(Map<String, dynamic> card) {
     ///
     var box = Boxes.getCards();
@@ -38,13 +55,14 @@ class BankCard extends HiveObject {
       ..expiry = card["expiry"]
       ..cvvNumber = card["cvvNumber"]
       ..country = card["country"]
+      ..editing = null
       ..lastUpdate = DateTime.now().millisecondsSinceEpoch;
 
     ///
     box.put(card["cardNumber"], toStore);
   }
 
-  Future<void> deleteCard(String key) => Boxes.getCards().delete(key);
+  Future<void> deleteCard() async => await Boxes.getCards().delete(cardNumber);
 
   @override
   String toString() {

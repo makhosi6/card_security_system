@@ -96,7 +96,7 @@ class SettingsButton extends StatelessWidget {
   }
 
   _navigateToBannedCountries(BuildContext context) {
-    ///close the modal
+    ///close the modal/bottomSheet
     Navigator.pop(context);
 
     ///then navigate to the next page

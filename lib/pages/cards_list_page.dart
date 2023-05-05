@@ -149,6 +149,35 @@ class __CardListItemState extends State<_CardListItem> {
               SlidableAction(
                 onPressed: (_) {
                   print("onDelete  ${widget.card.cardNumber}");
+
+                  if (widget.card.cardHolder == "Placeholder Card") {
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(const SnackBar(
+                        backgroundColor: Color.fromARGB(255, 67, 67, 67),
+                        content: Text(
+                          "You can't edit or delete a placeholder card",
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ));
+                    return;
+                  }
+
+                  /// delete card
+                  widget.card.deleteCard();
+
+                  /// show a snackbar confirmation to the user
+
+                  ScaffoldMessenger.of(context)
+                    ..clearSnackBars()
+                    ..showSnackBar(SnackBar(
+                      backgroundColor: Colors.redAccent[400],
+                      content: Text(
+                        "Card '${widget.card.cardNumber}' was deleted successfully",
+                        textAlign: TextAlign.center,
+                      ),
+                    ));
                 },
                 backgroundColor: const Color(0xFFFE4A49),
                 foregroundColor: Colors.white,
@@ -158,6 +187,43 @@ class __CardListItemState extends State<_CardListItem> {
               SlidableAction(
                 onPressed: (_) {
                   print("onEdit ${(widget.card.cardNumber)}");
+
+                  ///
+                  if (widget.card.cardHolder == "Placeholder Card") {
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(const SnackBar(
+                        backgroundColor: Color.fromARGB(255, 67, 67, 67),
+                        content: Text(
+                          "You can't edit or delete a placeholder card",
+                          style: TextStyle(color: Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ));
+
+                    return;
+                  }
+
+                  /// this card is being edited
+                  widget.card.setToEditingMode();
+
+                  ///
+                  CardDetails cardDetails = CardDetails.fromMap({
+                    "cardNumber": widget.card.cardNumber!,
+                    "cardHolderName": widget.card.cardHolder!,
+                    "expiryDate": widget.card.expiry!,
+                    // "_cardIssuer":
+                  });
+
+                  /// Navigate to the Edit screen/page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CreateEditCard(
+                        key: UniqueKey(),
+                        cardDetails: cardDetails,
+                      ),
+                    ),
+                  );
                 },
                 backgroundColor: const Color(0xFF21B7CA),
                 foregroundColor: Colors.white,

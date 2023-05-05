@@ -23,13 +23,14 @@ class BankCardAdapter extends TypeAdapter<BankCard> {
       ..expiry = fields[4] as String?
       ..cvvNumber = fields[5] as String?
       ..country = fields[6] as String?
-      ..lastUpdate = fields[7] as int?;
+      ..lastUpdate = fields[7] as int?
+      ..editing = fields[8] as bool?;
   }
 
   @override
   void write(BinaryWriter writer, BankCard obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(1)
       ..write(obj.cardNumber)
       ..writeByte(2)
@@ -43,7 +44,9 @@ class BankCardAdapter extends TypeAdapter<BankCard> {
       ..writeByte(6)
       ..write(obj.country)
       ..writeByte(7)
-      ..write(obj.lastUpdate);
+      ..write(obj.lastUpdate)
+      ..writeByte(8)
+      ..write(obj.editing);
   }
 
   @override
