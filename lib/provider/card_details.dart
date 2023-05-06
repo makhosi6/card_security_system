@@ -4,15 +4,13 @@ class InferCardType with ChangeNotifier {
   String _value = '';
 
   set value(String val) {
-    print("VALUE: |$val|");
-
     if (val == "unknown") {
       _value = "";
     } else {
       _value = val.toUpperCase();
     }
 
-    ///
+    /// broadcast changes
     notifyListeners();
   }
 

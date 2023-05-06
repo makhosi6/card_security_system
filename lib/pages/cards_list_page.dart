@@ -22,9 +22,6 @@ class CardListPage extends StatefulWidget {
 class _CardListPageState extends State<CardListPage>
     with CustomFloatingActionButton {
   ///
-  CardDetails? _cardDetails;
-
-  ///
   Future<void> scanCard(BuildContext context) async {
     /// no support for web card scanner
     if (kIsWeb) {
@@ -49,10 +46,6 @@ class _CardListPageState extends State<CardListPage>
     var cardDetails = await CardScanner.scanCard(scanOptions: scanOptions);
 
     if (!mounted) return;
-
-    setState(() {
-      _cardDetails = cardDetails;
-    });
 
     /// Then navigate to the edit/create page
     if (cardDetails != null) {
@@ -170,8 +163,6 @@ class __CardListItemState extends State<_CardListItem> {
             children: [
               SlidableAction(
                 onPressed: (_) {
-                  print("onDelete  ${widget.card.cardNumber}");
-
                   if (widget.card.cardHolder == "Placeholder Card") {
                     ScaffoldMessenger.of(context)
                       ..clearSnackBars()
@@ -208,9 +199,6 @@ class __CardListItemState extends State<_CardListItem> {
               ),
               SlidableAction(
                 onPressed: (_) {
-                  print("onEdit ${(widget.card.cardNumber)}");
-
-                  ///
                   if (widget.card.cardHolder == "Placeholder Card") {
                     ScaffoldMessenger.of(context)
                       ..clearSnackBars()

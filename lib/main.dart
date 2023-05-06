@@ -3,14 +3,12 @@ import 'dart:async';
 import 'package:card_security_system/models/banned_countries.dart';
 import 'package:card_security_system/models/boxes.dart';
 import 'package:card_security_system/models/card.dart';
-import 'package:card_security_system/models/country.dart';
 import 'package:card_security_system/models/theme.dart';
 import 'package:card_security_system/pages/cards_list_page.dart';
 import 'package:card_security_system/pages/country_config_page.dart';
 import 'package:card_security_system/pages/create_edit_card_page.dart';
 import 'package:card_security_system/provider/card_details.dart';
 import 'package:card_security_system/utils/helpers.dart';
-import 'package:card_security_system/utils/state_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -39,7 +37,7 @@ main() async {
       /// Pass all uncaught errors from the framework to Crashlytics.
       FlutterError.onError = (details) {
         if (kDebugMode) {
-          print(details);
+          debugPrint("$details");
         }
       };
 
@@ -52,14 +50,14 @@ main() async {
         providers: [
           ChangeNotifierProvider(create: (_) => InferCardType()),
         ],
-        child: StateManager(child: const App()),
+        child: const App(),
       ));
     },
     (error, _) {
       if (kDebugMode) {
         // In development mode simply print to console.
-        print('Caught Dart Error!');
-        print('$error');
+        debugPrint('Caught Dart Error!');
+        debugPrint('$error');
       } else {
         // In production
         // Report errors to a reporting service such as Sentry or Crashlytics
@@ -76,12 +74,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  ///
-  var country = const Country(code: "ZA", name: "SATAFRIKA");
-
-  ///
-  final _count = 0;
-
   ///user selected theme
   ThemeData? theme;
 

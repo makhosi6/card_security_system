@@ -69,11 +69,11 @@ Future<Map<String, dynamic>> getIssuingCountry(String cardNumber) async {
     if (response.statusCode == 200) {
       return jsonDecode(await response.stream.bytesToString());
     } else {
-      print("${response.reasonPhrase}");
+      debugPrint("${response.reasonPhrase}");
       return {};
     }
   } catch (e) {
-    print(e.toString());
+    debugPrint(e.toString());
     return {};
   }
 }
@@ -115,7 +115,7 @@ MaterialBanner editOnlyMaterialBanner(BuildContext context) => MaterialBanner(
         textAlign: TextAlign.center,
       ),
       leading: const Icon(Icons.edit_off_rounded),
-      actions: <Widget>[
+      actions: [
         TextButton(
           onPressed: () {},
           child: const Text(''),

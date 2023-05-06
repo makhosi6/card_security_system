@@ -31,14 +31,13 @@ class _ConfigCountriesPageState extends State<ConfigCountriesPage> {
           child: ValueListenableBuilder(
             valueListenable: Boxes.getBannedCountries().listenable(),
             builder: (context, box, child) {
-              /// list or all banned Contries | IF [bannedCountries] is empty the first element of the grid to selected
+              /// list or all banned Countries | IF [bannedCountries] is empty the first element of the grid to selected
               var bannedCountries = box.values.toList();
               if (bannedCountries.isEmpty) {
                 BannedCountry().saveData("AF");
                 BannedCountry().saveData("AX");
                 BannedCountry().saveData("VE");
               }
-              print("w2d2e ${bannedCountries.length}");
 //
               return GridView.count(
                 key: const Key("countries_grid"),
@@ -100,11 +99,6 @@ class __SelectableCountryState extends State<_SelectableCountry> {
     return SelectableContainer(
       key: UniqueKey(),
       onValueChanged: (newValue) {
-        print("SET SELECTED COUNTRY:  $newValue AS ${widget.country.code}");
-        // setState(() {
-        //   isSelected = newValue;
-        // });
-
         if (newValue) {
           /// Add country from a list of banned countries
           BannedCountry().saveData(widget.country.code);

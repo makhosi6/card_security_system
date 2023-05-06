@@ -6,7 +6,6 @@ import 'package:card_security_system/utils/helpers.dart';
 import 'package:card_security_system/widgets/settings_btn.dart';
 import 'package:credit_card_scanner/credit_card_scanner.dart';
 import 'package:credit_card_type_detector/credit_card_type_detector.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -53,12 +52,10 @@ class _CreateEditCardState extends State<CreateEditCard> {
   /// - powered by the [binlist.net] API
   void fetchIssuingCountry() async {
     try {
-      print("Update country");
       var issuingCountry =
           cardNumber.isNotEmpty ? await getIssuingCountry(cardNumber) : null;
 
       if (issuingCountry != null && issuingCountry.isNotEmpty && mounted) {
-        print("Update country");
         setState(() {
           country = Country(
               name: issuingCountry["country"]["name"],
@@ -66,7 +63,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
         });
       }
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 
@@ -93,7 +90,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
           //close the Snackbar/MaterialBanner
           ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
         } catch (e) {
-          print(e);
+          debugPrint(e.toString());
         }
         return true;
       },
@@ -138,7 +135,6 @@ class _CreateEditCardState extends State<CreateEditCard> {
                         /// cardholder name input field
                         _NamedTextInputWidget(
                           setValue: (String value) {
-                            print("CARDHOLDER||| $value");
                             if (mounted) {
                               setState(() {
                                 cardHolder = value;
@@ -156,7 +152,6 @@ class _CreateEditCardState extends State<CreateEditCard> {
                           valueListenable: ValueNotifier(
                               Provider.of<InferCardType>(context).value),
                           builder: (context, value, child) {
-                            print("CARD_TYPES: $value");
                             return _NamedTextInputWidget(
                               key: Key("$value"),
                               readOnly: true,
@@ -293,9 +288,6 @@ class _CreateEditCardState extends State<CreateEditCard> {
                               ),
                             ),
                             onPressed: () {
-                              print(
-                                  "$cardNumber  | $cardExpiry | $cardHolder | $cvvNumber | ${country?.flag} | $cardType");
-
                               /// check if form is filled correctly
                               if (_formKey.currentState!.validate()) {
                                 /// dismiss the keyboard
@@ -407,27 +399,27 @@ class _CreateEditCardState extends State<CreateEditCard> {
 
 class _NamedTextInputWidget extends StatefulWidget {
   /// Use this callback/param to update the parent, push the value up the tree
-  void Function(String value) setValue;
+  final void Function(String value) setValue;
 
   /// Displayed name of the ipt field
-  String? label;
+  final String? label;
 
   /// Hint or helper text OR description
-  String? hint;
+  final String? hint;
 
   /// data type, text or number
-  TextInputType? type;
+  final TextInputType? type;
 
   /// Expected maximum number of digits or letter
-  int? inputLimit;
+  final int? inputLimit;
 
   /// initial value of the field passed from the parent widget
-  dynamic initialValue;
+  final dynamic initialValue;
 
   /// is it a read oly input field
-  bool? readOnly;
+  final bool? readOnly;
 
-  _NamedTextInputWidget({
+  const _NamedTextInputWidget({
     Key? key,
     required this.setValue,
     required this.label,
@@ -456,8 +448,6 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
   @override
   void initState() {
     super.initState();
-    print("+=================================+");
-    print("SET TO ${widget.initialValue}");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       focusNode.addListener(() {
@@ -472,10 +462,6 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
 
       /// set initial value if available
       if ((widget.initialValue != null && widget.initialValue != "")) {
-        print("==================================");
-        print("${widget.initialValue} ${widget.initialValue.runtimeType}");
-        print("==================================");
-
         inputController.text = "${widget.initialValue}";
 
         if (widget.label == 'Card Number') {
@@ -587,12 +573,7 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
   /// - returns [null] is its valid
   /// - a string if it's not valid
   String? validate(String? value) {
-    if (kDebugMode) {
-      print("Value From ${widget.label} | $value");
-    }
-
     if (value != null && value.isNotEmpty) widget.setValue(value);
-
     if (value == null || value.isEmpty) {
       /// hint for the card Type | Card Issuer field
       if (widget.label == 'Card Type (read only)') {
@@ -641,8 +622,6 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
         }
       case 'CVV Number':
         {
-          print("|$value|   ${value.length}");
-
           /// must have between 3 and 4 digits
           if (value.trim().length != 3 && value.trim().length != 4) {
             return "A valid CVV number has 3 to 4 digits.";
@@ -652,7 +631,7 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
 
       default:
         {
-          print("default");
+          debugPrint("default");
         }
     }
 

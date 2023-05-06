@@ -13,7 +13,7 @@ class AppTheme extends HiveObject {
   saveData(String theme) {
     ///theme value should be "dark" | "light"
     if (theme != 'dark' && theme != 'light') {
-      throw 'THE theme value should be "dark" | "light", but it received "$theme"';
+      throw 'The theme value should be "dark" | "light", but it received "$theme"';
     }
 
     /// get the box

@@ -10,7 +10,7 @@ void main() {
 
   for (var i = 0; i < lr.length; i++) {
     var t = lr[i];
-    print('========> $t');
+    print('$r========> $t');
     if (t >= 3 && t <= 4) {
       print("$t  A valid CVV number has 3 to 4 digits.");
     } else {

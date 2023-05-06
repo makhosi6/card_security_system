@@ -54,8 +54,6 @@ abstract class CustomFloatingActionButton {
         switchLabelPosition: switchLabelPosition,
         closeManually: closeManually,
         renderOverlay: renderOverlay,
-        onOpen: () => debugPrint('OPENING DIAL'),
-        onClose: () => debugPrint('DIAL CLOSED'),
         tooltip: 'Open Speed Dial',
         heroTag: 'speed-dial-hero-tag',
         elevation: 8.0,
@@ -66,10 +64,7 @@ abstract class CustomFloatingActionButton {
             backgroundColor: const Color(0xFF21B7CA),
             foregroundColor: Colors.white,
             label: 'Input Card Details',
-            onTap: () {
-              print('Input Card Details');
-              Navigator.pushNamed(context, CreateEditCard.routeName);
-            },
+            onTap: () => Navigator.pushNamed(context, CreateEditCard.routeName),
           ),
           SpeedDialChild(
             child: const Icon(Icons.qr_code_scanner_rounded),

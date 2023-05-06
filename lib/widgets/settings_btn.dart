@@ -108,7 +108,6 @@ class SettingsButton extends StatelessWidget {
   _navigateToBannedCountries(BuildContext context) {
     ///close the modal/bottomSheet
     Navigator.pop(context);
-    print("${ModalRoute.of(context)?.settings.name} ROUTE NAME");
 
     ///then navigate to the next page
     Navigator.pushNamed(context, ConfigCountriesPage.routeName);
