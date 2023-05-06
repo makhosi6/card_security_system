@@ -2,11 +2,9 @@ name: gh-pages
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+    tags:
+      - '*'
+    branches: [ "main" ]
 
 jobs:
   build:
