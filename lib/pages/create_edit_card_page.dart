@@ -573,78 +573,87 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
   /// - returns [null] is its valid
   /// - a string if it's not valid
   String? validate(String? value) {
-    if (value != null && value.isNotEmpty) widget.setValue(value);
-    if (value == null || value.isEmpty) {
-      /// hint for the card Type | Card Issuer field
-      if (widget.label == 'Card Type (read only)') {
-        return "The provided card number is not from a valid card issuer, please type a correct card number";
+    try {
+      if (value != null && value.isNotEmpty) widget.setValue(value);
+      if (value == null || value.isEmpty) {
+        /// hint for the card Type | Card Issuer field
+        if (widget.label == 'Card Type (read only)') {
+          return "The provided card number is not from a valid card issuer, please type a correct card number";
+        }
+
+        /// hint for the card Type | Card Issuer field
+        if (widget.label == 'Card Type (read only)' && value!.isNotEmpty) {
+          return "The provided card number is not from a valid card issuer, please type a correct card number";
+        }
+        return widget.hint;
       }
-      return widget.hint;
+
+      /// validation for each type
+      switch (widget.label) {
+        case 'Card Number':
+          {
+            /// must have more than 16 digits
+            if (value.length < 16) {
+              return "A valid card number has more than 16 digits.";
+            }
+
+            /// must have less than 19 digits
+            if (value.length > 19) {
+              return "A valid card number has a maximum of 19 digits.";
+            }
+            //
+            break;
+          }
+        case 'Cardholder Name':
+          {
+            /// must have more than 2 letters
+            if (value.length < 2) {
+              return "A valid name has more than 2 letters.";
+            }
+            break;
+          }
+        case 'Card Type (read only)':
+          {
+            /// Valid card issues, 'unknown' is not a valid issue
+            var issuers = CardIssuer.values.map((e) => e.name).toList()
+              ..remove("unknown");
+
+            /// must be one of the issuers
+
+            if (!issuers.contains(value.toLowerCase())) {
+              return "The provided value is not a valid issuer";
+            }
+            //
+            break;
+          }
+        case 'CVV Number':
+          {
+            /// must have between 3 and 4 digits
+            if (value.trim().length != 3 && value.trim().length != 4) {
+              return "A valid CVV number has 3 to 4 digits.";
+            }
+            break;
+          }
+
+        default:
+          {
+            debugPrint("default");
+          }
+      }
+
+      /// update the parent, push the value up the tree
+      widget.setValue(value);
+
+      /// at this the field value is valid
+      setState(() {
+        isValidated = true;
+      });
+
+      /// then return null
+      return null;
+    } catch (e) {
+      return null;
     }
-
-    /// validation for each type
-    switch (widget.label) {
-      case 'Card Number':
-        {
-          /// must have more than 16 digits
-          if (value.length < 16) {
-            return "A valid card number has more than 16 digits.";
-          }
-
-          /// must have less than 19 digits
-          if (value.length > 19) {
-            return "A valid card number has a maximum of 19 digits.";
-          }
-          //
-          break;
-        }
-      case 'Cardholder Name':
-        {
-          /// must have more than 2 letters
-          if (value.length < 2) {
-            return "A valid name has more than 2 letters.";
-          }
-          break;
-        }
-      case 'Card Type (read only)':
-        {
-          /// Valid card issues, 'unknown' is not a valid issue
-          var issuers = CardIssuer.values.map((e) => e.name).toList()
-            ..remove("unknown");
-
-          /// must be one of the issuers
-
-          if (!issuers.contains(value.toLowerCase())) {
-            return "The provided value is not a valid issuer";
-          }
-          //
-          break;
-        }
-      case 'CVV Number':
-        {
-          /// must have between 3 and 4 digits
-          if (value.trim().length != 3 && value.trim().length != 4) {
-            return "A valid CVV number has 3 to 4 digits.";
-          }
-          break;
-        }
-
-      default:
-        {
-          debugPrint("default");
-        }
-    }
-
-    /// update the parent, push the value up the tree
-    widget.setValue(value);
-
-    /// at this the field value is valid
-    setState(() {
-      isValidated = true;
-    });
-
-    /// then return null
-    return null;
   }
 
   @override
