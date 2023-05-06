@@ -19,7 +19,7 @@ abstract class CustomFloatingActionButton {
   var selectedfABLocation = FloatingActionButtonLocation.endDocked;
 
   SpeedDial floatingActionButtonAsSpeedDial(BuildContext context,
-          {required Future<void> Function() scanCard}) =>
+          {required Future<void> Function(BuildContext c) scanCard}) =>
       SpeedDial(
         overlayOpacity: 0.2,
         overlayColor: Colors.black,
@@ -76,7 +76,7 @@ abstract class CustomFloatingActionButton {
             backgroundColor: const Color.fromARGB(255, 34, 93, 255),
             foregroundColor: Colors.white,
             label: 'Scan Card Details',
-            onTap: scanCard,
+            onTap: () => scanCard(context),
           ),
         ],
       );

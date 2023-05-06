@@ -25,7 +25,27 @@ class _CardListPageState extends State<CardListPage>
   CardDetails? _cardDetails;
 
   ///
-  Future<void> scanCard() async {
+  Future<void> scanCard(BuildContext context) async {
+    /// no support for web card scanner
+    if (kIsWeb) {
+      ScaffoldMessenger.of(context)
+        ..clearSnackBars()
+        ..clearMaterialBanners()
+        ..showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.redAccent[400],
+            content: const Text(
+              "No web support for card scanner",
+              style: TextStyle(color: Colors.white),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+
+      return;
+    }
+
+    ///open a card scanner
     var cardDetails = await CardScanner.scanCard(scanOptions: scanOptions);
 
     if (!mounted) return;
@@ -61,39 +81,41 @@ class _CardListPageState extends State<CardListPage>
       ),
       floatingActionButton:
           floatingActionButtonAsSpeedDial(context, scanCard: scanCard),
-      body: Container(
-        padding: const EdgeInsets.only(bottom: 20.0),
-        constraints: const BoxConstraints(maxWidth: 400.0),
-        child: ValueListenableBuilder(
-            valueListenable: Boxes.getCards().listenable(),
-            builder: (context, box, child) {
-              /// sort the cards list by [lastUpdate] timestamp
-              var cards = box.values.toList()
-                ..sort((a, b) => (b.lastUpdate ?? 0) - (a.lastUpdate ?? 0));
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          constraints: const BoxConstraints(maxWidth: 400.0),
+          child: ValueListenableBuilder(
+              valueListenable: Boxes.getCards().listenable(),
+              builder: (context, box, child) {
+                /// sort the cards list by [lastUpdate] timestamp
+                var cards = box.values.toList()
+                  ..sort((a, b) => (b.lastUpdate ?? 0) - (a.lastUpdate ?? 0));
 
-              /// placeholder card if [cards] is empty
-              if (cards.isEmpty) {
-                cards = [
-                  BankCard()
-                    ..cardHolder = "Placeholder Card"
-                    ..cardNumber = "0000000000000000"
-                    ..country = "ZA"
-                    ..cvvNumber = "234"
-                    ..expiry = "01/23"
-                    ..lastUpdate = DateTime.now().millisecondsSinceEpoch
-                ];
-              }
+                /// placeholder card if [cards] is empty
+                if (cards.isEmpty) {
+                  cards = [
+                    BankCard()
+                      ..cardHolder = "Placeholder Card"
+                      ..cardNumber = "0000000000000000"
+                      ..country = "ZA"
+                      ..cvvNumber = "234"
+                      ..expiry = "01/23"
+                      ..lastUpdate = DateTime.now().millisecondsSinceEpoch
+                  ];
+                }
 
-              ///
-              return ListView.builder(
-                itemCount: cards.length,
-                itemBuilder: (context, index) {
-                  return _CardListItem(
-                    card: cards.elementAt(index),
-                  );
-                },
-              );
-            }),
+                ///
+                return ListView.builder(
+                  itemCount: cards.length,
+                  itemBuilder: (context, index) {
+                    return _CardListItem(
+                      card: cards.elementAt(index),
+                    );
+                  },
+                );
+              }),
+        ),
       ),
     );
   }
@@ -192,19 +214,21 @@ class __CardListItemState extends State<_CardListItem> {
                   if (widget.card.cardHolder == "Placeholder Card") {
                     ScaffoldMessenger.of(context)
                       ..clearSnackBars()
-                      ..showSnackBar(const SnackBar(
-                        backgroundColor: Color.fromARGB(255, 67, 67, 67),
-                        content: Text(
-                          "You can't edit or delete a placeholder card",
-                          style: TextStyle(color: Colors.white),
-                          textAlign: TextAlign.center,
+                      ..showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Color.fromARGB(255, 67, 67, 67),
+                          content: Text(
+                            "You can't edit or delete a placeholder card",
+                            style: TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ));
+                      );
 
                     return;
                   }
 
-                  /// this card is being edited
+                  /// Set this card editing mode
                   widget.card.setToEditingMode();
 
                   ///

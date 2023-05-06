@@ -48,10 +48,6 @@ class _ConfigCountriesPageState extends State<ConfigCountriesPage> {
                     /// check if the country is banned
                     var isCountryBanned = box.get(key);
 
-                    if (isCountryBanned != null) {
-                      print("$isCountryBanned   Is Country Banned");
-                    }
-
                     ///
                     return _SelectableCountry(
                       key: Key("country_$key"),

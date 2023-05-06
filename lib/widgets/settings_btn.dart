@@ -87,6 +87,7 @@ class SettingsButton extends StatelessWidget {
     bool isDarkMode = brightness == Brightness.dark;
 
     /// toggle between dark & light mode
+    /// if [themeBox] empty set to system theme
     if (themeBox.isEmpty) {
       if (isDarkMode) {
         AppTheme().saveData('light');
@@ -95,39 +96,19 @@ class SettingsButton extends StatelessWidget {
       }
     } else if (themeBox.values.first.theme == "dark") {
       /// save the option on a persistent storage
-      themeBox.values.first.saveData('light');
-
       /// update provider and trigger UI update
-      // userTheme.value = lightTheme;
+      themeBox.values.first.saveData('light');
     } else {
       /// save the option on a persistent storage
-      themeBox.values.first.saveData('dark');
-
       /// update provider and trigger UI update
-      // userTheme.value = darkTheme;
+      themeBox.values.first.saveData('dark');
     }
   }
-
-  // toggleTheme(BuildContext context) {
-  //   /// theme provider
-  //   // var userTheme = Provider.of<UserTheme>(context, listen: false);
-
-  //   // theme storage
-  //   var themeBox = Boxes.getThemeData();
-  //   if (themeBox.values.isNotEmpty) {
-  //     if (themeBox.values.first.theme == "dark") {
-  //       print("TO DARK");
-  //       userTheme.value = darkTheme;
-  //     } else {
-  //       print("TO LIGHT");
-  //       userTheme.value = lightTheme;
-  //     }
-  //   }
-  // }
 
   _navigateToBannedCountries(BuildContext context) {
     ///close the modal/bottomSheet
     Navigator.pop(context);
+    print("${ModalRoute.of(context)?.settings.name} ROUTE NAME");
 
     ///then navigate to the next page
     Navigator.pushNamed(context, ConfigCountriesPage.routeName);

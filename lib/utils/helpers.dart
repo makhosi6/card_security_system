@@ -110,7 +110,10 @@ CardScanOptions scanOptions = const CardScanOptions(
 
 MaterialBanner editOnlyMaterialBanner(BuildContext context) => MaterialBanner(
       backgroundColor: Colors.grey,
-      content: const Text('You can\'t edit the card number.'),
+      content: const Text(
+        'You can\'t edit the card number.',
+        textAlign: TextAlign.center,
+      ),
       leading: const Icon(Icons.edit_off_rounded),
       actions: <Widget>[
         TextButton(
