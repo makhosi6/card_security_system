@@ -1,8 +1,7 @@
+import 'package:card_security_system/models/boxes.dart';
 import 'package:card_security_system/models/theme.dart';
 import 'package:card_security_system/pages/country_config_page.dart';
-import 'package:card_security_system/provider/theme.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SettingsButton extends StatelessWidget {
   const SettingsButton({super.key});
@@ -17,8 +16,7 @@ class SettingsButton extends StatelessWidget {
             builder: (context) {
               /// active color
               var activeColor =
-                  Provider.of<UserTheme>(context, listen: false).value ==
-                          ThemeData.dark()
+                  Boxes.getThemeData().get("theme")?.theme == "dark"
                       ? const Color.fromARGB(255, 100, 255, 218)
                       : Theme.of(context).colorScheme.primary;
 
@@ -76,24 +74,56 @@ class SettingsButton extends StatelessWidget {
   }
 
   void _changeTheme(BuildContext context) {
-    ///
-    var userTheme = Provider.of<UserTheme>(context, listen: false);
+    /// theme storage box
+    var themeBox = Boxes.getThemeData();
+
+    /// theme provider
+    // var userTheme = Provider.of<UserTheme>(context, listen: false);
+
+    // /// system theme and brightness
+    Brightness brightness =
+        MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+            .platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
 
     /// toggle between dark & light mode
-    if (userTheme.value == darkTheme) {
-      /// update provider and trigger UI update
-      userTheme.value = lightTheme;
-
+    if (themeBox.isEmpty) {
+      if (isDarkMode) {
+        AppTheme().saveData('light');
+      } else {
+        AppTheme().saveData('dark');
+      }
+    } else if (themeBox.values.first.theme == "dark") {
       /// save the option on a persistent storage
-      AppTheme().saveData('light');
+      themeBox.values.first.saveData('light');
+
+      /// update provider and trigger UI update
+      // userTheme.value = lightTheme;
     } else {
-      /// update provider and trigger UI update
-      userTheme.value = darkTheme;
-
       /// save the option on a persistent storage
-      AppTheme().saveData('dark');
+      themeBox.values.first.saveData('dark');
+
+      /// update provider and trigger UI update
+      // userTheme.value = darkTheme;
     }
   }
+
+  // toggleTheme(BuildContext context) {
+  //   /// theme provider
+  //   // var userTheme = Provider.of<UserTheme>(context, listen: false);
+
+  //   // theme storage
+  //   var themeBox = Boxes.getThemeData();
+  //   if (themeBox.values.isNotEmpty) {
+  //     if (themeBox.values.first.theme == "dark") {
+  //       print("TO DARK");
+  //       userTheme.value = darkTheme;
+  //     } else {
+  //       print("TO LIGHT");
+  //       userTheme.value = lightTheme;
+  //     }
+  //   }
+  // }
 
   _navigateToBannedCountries(BuildContext context) {
     ///close the modal/bottomSheet

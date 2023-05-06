@@ -21,7 +21,7 @@ class BannedCountry extends HiveObject {
   }
 
   /// key is a 2 letter Country Code
-  Future<void> deleteData(String key) => Boxes.getBannedCountries().delete(key);
+  Future<void> deleteData() => Boxes.getBannedCountries().delete(code);
 
   @override
   String toString() {

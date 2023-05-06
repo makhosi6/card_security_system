@@ -11,6 +11,11 @@ class AppTheme extends HiveObject {
   /// to save or to update the Theme
   /// - theme, i.e "dark" | "light"
   saveData(String theme) {
+    ///theme value should be "dark" | "light"
+    if (theme != 'dark' && theme != 'light') {
+      throw 'THE theme value should be "dark" | "light", but it received "$theme"';
+    }
+
     /// get the box
     var box = Boxes.getThemeData();
 

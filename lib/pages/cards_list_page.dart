@@ -242,7 +242,7 @@ class __CardListItemState extends State<_CardListItem> {
 
             /// type
             subtitle: SizedBox(
-              height: 37.0,
+              height: 40.0,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -250,7 +250,9 @@ class __CardListItemState extends State<_CardListItem> {
                   Text("${widget.card.expiry}"),
                   Text(
                     "${widget.card.cardHolder}",
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis),
                   ),
                 ],
               ),

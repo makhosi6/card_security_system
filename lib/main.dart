@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:card_security_system/models/banned_countries.dart';
+import 'package:card_security_system/models/boxes.dart';
 import 'package:card_security_system/models/card.dart';
 import 'package:card_security_system/models/country.dart';
 import 'package:card_security_system/models/theme.dart';
@@ -8,7 +9,7 @@ import 'package:card_security_system/pages/cards_list_page.dart';
 import 'package:card_security_system/pages/country_config_page.dart';
 import 'package:card_security_system/pages/create_edit_card_page.dart';
 import 'package:card_security_system/provider/card_details.dart';
-import 'package:card_security_system/provider/theme.dart';
+import 'package:card_security_system/utils/helpers.dart';
 import 'package:card_security_system/utils/state_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -42,14 +43,13 @@ main() async {
         }
       };
 
-      // / Fallback page on fatal error
+      //// Fallback page on fatal error
       // ErrorWidget.builder = (details) => Scaffold(
       //       body: Center(child: Text("Error: $details")),
       //     );
 
       runApp(MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => UserTheme()),
           ChangeNotifierProvider(create: (_) => InferCardType()),
         ],
         child: StateManager(child: const App()),
@@ -93,19 +93,31 @@ class _AppState extends State<App> {
             .platformBrightness;
     bool isDarkMode = brightness == Brightness.dark;
 
-    ///get selected theme
-    ThemeData theme = (Provider.of<UserTheme>(context).value) ??
-        ((isDarkMode) ? darkTheme : lightTheme);
-
     ///
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: theme,
-      title: "Card Security System",
-      home: const CardListPage(),
-      routes: {
-        ConfigCountriesPage.routeName: (context) => const ConfigCountriesPage(),
-        CreateEditCard.routeName: (context) => const CreateEditCard()
+    return ValueListenableBuilder(
+      valueListenable: Boxes.getThemeData().listenable(),
+      builder: (context, box, child) {
+        //stored theme
+        var stored = box.get("theme");
+
+        ///get selected theme
+        ThemeData theme = stored != null
+            ? stored.theme == "dark"
+                ? darkTheme
+                : lightTheme
+            : ((isDarkMode) ? darkTheme : lightTheme);
+
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: theme,
+          title: "Card Security System",
+          home: const CardListPage(),
+          routes: {
+            ConfigCountriesPage.routeName: (context) =>
+                const ConfigCountriesPage(),
+            CreateEditCard.routeName: (context) => const CreateEditCard()
+          },
+        );
       },
     );
   }

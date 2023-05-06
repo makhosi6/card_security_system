@@ -3,6 +3,29 @@ import 'package:credit_card_scanner/models/card_scan_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
+
+/// is it a iOS device
+var isApple = TargetPlatform.iOS == defaultTargetPlatform;
+
+/// default theme
+var defaultTheme = ThemeData(
+    colorScheme:
+        isApple ? ColorScheme.fromSwatch(primarySwatch: Colors.indigo) : null,
+    primarySwatch: !isApple ? Colors.indigo : null,
+    primaryColor: !isApple ? Colors.indigo : null,
+    useMaterial3: isApple);
+
+/// default light theme
+var lightTheme = ThemeData.light(useMaterial3: isApple).copyWith(
+    colorScheme:
+        !isApple ? ColorScheme.fromSwatch(primarySwatch: Colors.indigo) : null,
+    // primarySwatch: isApple ? Colors.indigo : null,
+    primaryColor: !isApple ? Colors.indigo : null,
+    useMaterial3: isApple);
+
+/// default dark theme
+var darkTheme = ThemeData.dark(useMaterial3: isApple);
 
 class BankCardNumberFormatter extends TextInputFormatter {
   String mask;
