@@ -23,8 +23,9 @@ class _CardListPageState extends State<CardListPage>
     with CustomFloatingActionButton {
   ///
   Future<void> scanCard(BuildContext context) async {
-    /// no support for web card scanner
-    if (kIsWeb) {
+    /// no support for card scanner, on [web], [macos], and other platforms
+    if (TargetPlatform.android != defaultTargetPlatform &&
+        TargetPlatform.iOS != defaultTargetPlatform) {
       ScaffoldMessenger.of(context)
         ..clearSnackBars()
         ..clearMaterialBanners()
@@ -32,7 +33,7 @@ class _CardListPageState extends State<CardListPage>
           SnackBar(
             backgroundColor: Colors.redAccent[400],
             content: const Text(
-              "No web support for card scanner",
+              "No support for card scanner on this platform.",
               style: TextStyle(color: Colors.white),
               textAlign: TextAlign.center,
             ),
