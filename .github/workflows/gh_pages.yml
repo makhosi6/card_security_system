@@ -16,3 +16,4 @@ jobs:
       - uses: bluefireteam/flutter-gh-pages@v7
         with:
           baseHref: /card_security_system/
+          token: ${{ secrets.GITHUB_TOKEN }}
