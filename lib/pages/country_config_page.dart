@@ -35,7 +35,7 @@ class _ConfigCountriesPageState extends State<ConfigCountriesPage> {
               var bannedCountries = box.values.toList();
               if (bannedCountries.isEmpty) {
                 BannedCountry().saveData("AF");
-                BannedCountry().saveData("AF");
+                BannedCountry().saveData("AX");
                 BannedCountry().saveData("VE");
               }
               print("w2d2e ${bannedCountries.length}");

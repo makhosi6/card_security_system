@@ -320,6 +320,28 @@ class _CreateEditCardState extends State<CreateEditCard> {
                                   return;
                                 }
 
+                                /// Check if the country is banned
+                                ///
+                                var bannedCountries =
+                                    Boxes.getBannedCountries().values.toList();
+
+                                if (bannedCountries
+                                    .where((e) => e.code == country?.code)
+                                    .isNotEmpty) {
+                                  ScaffoldMessenger.of(context)
+                                    ..clearSnackBars()
+                                    ..clearMaterialBanners()
+                                    ..showSnackBar(SnackBar(
+                                      backgroundColor: Colors.red[400],
+                                      content: Text(
+                                        "'${country?.name}'(${country?.code}) is banned country'",
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ));
+
+                                  return;
+                                }
+
                                 ///data as a Map
                                 var data = {
                                   "cardNumber": cardNumber,
