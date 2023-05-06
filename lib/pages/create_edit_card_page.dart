@@ -99,7 +99,7 @@ class _CreateEditCardState extends State<CreateEditCard> {
           title: const Text("Create or Update Card"),
           actions: const [SettingsButton()],
         ),
-        body: Container(
+        body: SizedBox(
           child: SingleChildScrollView(
             child: Center(
               child: Column(
