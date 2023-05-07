@@ -624,15 +624,17 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
           }
         case 'Expiry Date':
           {
+            var invalidDateMsg =
+                'Please make sure the date format is valid, i.e, 12/30';
             var data = value.split('/');
 
             var month = data[0];
             var year = data[1];
 
             /// check if the format is valid
-            if ((!value.contains("/") || data.length < 2 || year.length > 2)) {
-              return 'Please make sure the date format is valid, i.e, 12/30';
-            }
+            if (value.contains("/") != true) return invalidDateMsg; // "12/30"
+            if (data.length != 2) return invalidDateMsg; // [12, 30]
+            if (year.length != 2) return invalidDateMsg; // 30
 
             /// check if the data is valid
             if (DateTime.now().year > (2000 + int.parse(year))) {
