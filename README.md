@@ -21,11 +21,11 @@ You can quickly and securely verify credit card numbers in real-time. Simply ent
 </div>
 <div style="width:200px;">
 
-![](./assets/swipe-delete-update.mp4)
+![](./assets/swipe-delete-update.gif)
 
 </div>
 <div style="width:200px;">
-    <img width="200" src="./assets/change-theme.gif" align="left">
+    <img width="200" src="./assets/select-banned-countriers.gif" align="left">
 </div>
 
 </p>
