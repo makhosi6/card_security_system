@@ -20,7 +20,7 @@ You can quickly and securely verify credit card numbers in real-time. Simply ent
       <video src="./assets/swipe-delete-update.mp4" align="right">
 </p>
 <p align="center">
-      <img src="./assets/settings.png" align="left">
-      <img src="./assets/use_camera.png">
-      <img src="./assets/more-options.png" align="right">
+      <img width="200" src="./assets/settings.png" align="left">
+      <img width="200" src="./assets/use_camera.png">
+      <img width="200" src="./assets/more-options.png" align="right">
 </p>
