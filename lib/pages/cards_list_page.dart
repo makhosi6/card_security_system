@@ -186,7 +186,7 @@ class __CardListItemState extends State<_CardListItem> {
                   ScaffoldMessenger.of(context)
                     ..clearSnackBars()
                     ..showSnackBar(SnackBar(
-                      backgroundColor: Colors.redAccent[400],
+                      backgroundColor: Colors.greenAccent[400],
                       content: Text(
                         "Card '${widget.card.cardNumber}' was deleted successfully",
                         textAlign: TextAlign.center,

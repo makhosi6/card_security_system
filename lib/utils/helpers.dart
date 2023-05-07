@@ -5,8 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
-/// is it a iOS device
-var isApple = TargetPlatform.iOS == defaultTargetPlatform;
+/// is it a iOS/macOS device
+var isApple = TargetPlatform.iOS == defaultTargetPlatform ||
+    TargetPlatform.macOS == defaultTargetPlatform;
 
 /// default theme
 var defaultTheme = ThemeData(

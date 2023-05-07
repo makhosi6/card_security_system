@@ -581,10 +581,6 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
           return "The provided card number is not from a valid card issuer, please type a correct card number";
         }
 
-        /// hint for the card Type | Card Issuer field
-        if (widget.label == 'Card Type (read only)' && value!.isNotEmpty) {
-          return "The provided card number is not from a valid card issuer, please type a correct card number";
-        }
         return widget.hint;
       }
 
@@ -624,6 +620,28 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
               return "The provided value is not a valid issuer";
             }
             //
+            break;
+          }
+        case 'Expiry Date':
+          {
+            var data = value.split('/');
+
+            var month = data[0];
+            var year = data[1];
+
+            /// check if the format is valid
+            if ((!value.contains("/") || data.length < 2 || year.length > 2)) {
+              return 'Please make sure the date format is valid, i.e, 12/30';
+            }
+
+            /// check if the data is valid
+            if (DateTime.now().year > (2000 + int.parse(year))) {
+              return "The card is expired.";
+            }
+            if (!((int.parse(month) < 13) && (int.parse(month) > 0))) {
+              return 'Invalid month, month should be below 13 but above 0';
+            }
+
             break;
           }
         case 'CVV Number':
