@@ -13,11 +13,10 @@ You can quickly and securely verify credit card numbers in real-time. Simply ent
 - Change theme or use default system theme
 - Persistent data (card details, user theme, selected countries), across sessions.
 
-
 <p align="center">
-      <video src="./assets/change-theme.mp4" align="left">
-      <video src="./assets/select_banned_countriers.mp4">
-      <video src="./assets/swipe-delete-update.mp4" align="right">
+<div style="width:100%;height:0;padding-bottom:222%;position:relative;"><iframe src="https://giphy.com/embed/wrTBuDiLulZqF6BE0F" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/wrTBuDiLulZqF6BE0F">via GIPHY</a></p>
+<div style="width:200px;height:0;padding-bottom:222%;position:relative;"><iframe src="https://giphy.com/embed/xKqY7zRx1RVPqRYDH6" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/xKqY7zRx1RVPqRYDH6">via GIPHY</a></p>
+<div style="width:200px;height:0;padding-bottom:222%;position:relative;"><iframe src="https://giphy.com/embed/rga2zprGSrzHidsNvm" width="100%" height="100%" style="position:absolute" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></div><p><a href="https://giphy.com/gifs/rga2zprGSrzHidsNvm">via GIPHY</a></p>
 </p>
 <p align="center">
       <img width="200" src="./assets/settings.png" align="left">
