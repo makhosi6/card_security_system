@@ -278,7 +278,7 @@ class __CardListItemState extends State<_CardListItem> {
               children: [
                 Text(
                   country.flag,
-                  style: const TextStyle(fontSize: 22.0),
+                  style: const TextStyle(fontSize: 19.0),
                 ),
                 Text(
                   widget.card.cardType ?? "ISSUER",

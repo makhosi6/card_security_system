@@ -6,25 +6,27 @@
 name: Dart
 
 on:
+  create:
+    tags:
+      - v*
   push:
     tags:
       - '*'
     branches: [ "main" ]
 
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: '0'
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #     with:
+  #       fetch-depth: '0'
 
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.61.0 
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
+  #   - name: Bump version and push tag
+  #     uses: anothrNick/github-tag-action@1.61.0 
+  #     env:
+  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       WITH_V: true
 
   flutter_test:
     name: Run flutter test and analyze
@@ -79,6 +81,7 @@ jobs:
         with:
          artifacts: "build/app/outputs/flutter-apk/*.apk"
          token: ${{ secrets.GITHUB_TOKEN }}
-         commit: master
-         tag: v1.0.${{ github.run_number }}
+         tag_name: ${{ github.run_number }}
+         release_name: Release ${{ github.run_number }}
+
       

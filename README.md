@@ -12,3 +12,15 @@ You can quickly and securely verify credit card numbers in real-time. Simply ent
 - Configure/select banned countries
 - Change theme or use default system theme
 - Persistent data (card details, user theme, selected countries), across sessions.
+
+
+<p align="center">
+      <video src="./assets/change-theme.mp4" align="left">
+      <video src="./assets/select_banned_countriers.mp4">
+      <video src="./assets/swipe-delete-update.mp4" align="right">
+</p>
+<p align="center">
+      <img src="./assets/settings.png" align="left">
+      <img src="./assets/use_camera.png">
+      <img src="./assets/more-options.png" align="right">
+</p>
