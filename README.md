@@ -13,24 +13,16 @@ You can quickly and securely verify credit card numbers in real-time. Simply ent
 - Change theme or use default system theme
 - Persistent data (card details, user theme, selected countries), across sessions.
 
+---
+
 <p align="center">
-<div style="width:200px;">
-
-![](./assets/change-theme.gif)
-
-</div>
-<div style="width:200px;">
-
-![](./assets/swipe-delete-update.gif)
-
-</div>
-<div style="width:200px;">
-    <img width="200" src="./assets/select-banned-countriers.gif" align="left">
-</div>
+    <img width="200" src="./assets/swipe-delete-update.gif" align="left">
+    <img width="200" src="./assets/change-theme.gif">
+    <img width="200" src="./assets/select-banned-countriers.gif" align="right">
 
 </p>
 <p align="center">
-      <img width="200" src="./assets/settings.png" align="left">
+      <img width="200"src="./assets/more-options.png"  align="left">
       <img width="200" src="./assets/use_camera.png">
-      <img width="200" src="./assets/more-options.png" align="right">
+      <img width="200" src="./assets/settings.png" align="right">
 </p>
