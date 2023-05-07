@@ -26,6 +26,7 @@ You can quickly and securely verify credit card numbers in real-time. Simply ent
       <img width="200" src="./assets/use_camera.png">
       <img width="200" src="./assets/settings.png" align="right">
 </p>
+
 ---
 
 - **PLEASE NOTE that the project relies on a rate-limited API, so if you exhaust the credits, it might not be able to provide a country name for some of the records.**
