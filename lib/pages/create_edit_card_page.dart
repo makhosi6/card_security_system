@@ -469,7 +469,8 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
           ///  - broadcast type inferred card type using the card number
           var types = detectCCType(widget.initialValue);
 
-          Provider.of<InferCardType>(context, listen: false).value = types.name;
+          Provider.of<InferCardType>(context, listen: false).value =
+              types.name.toString() ?? "unknown";
         }
 
         ///Check the value, and then,
@@ -537,7 +538,7 @@ class _NamedTextInputWidgetState extends State<_NamedTextInputWidget> {
             var types = detectCCType(value);
 
             Provider.of<InferCardType>(context, listen: false).value =
-                types.name;
+                types.name.toString();
           }
 
           ///Check the value, and then,
