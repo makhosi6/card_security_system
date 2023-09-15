@@ -68,7 +68,7 @@ PODS:
 DEPENDENCIES:
   - credit_card_scanner (from `.symlinks/plugins/credit_card_scanner/ios`)
   - Flutter (from `Flutter`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -92,7 +92,7 @@ EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/ios"
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
 
 SPEC CHECKSUMS:
   credit_card_scanner: 2c3c58d821ec493cb42cf7c782dc461f516c212b

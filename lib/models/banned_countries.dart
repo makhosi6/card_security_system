@@ -10,14 +10,14 @@ class BannedCountry extends HiveObject {
   String? code;
 
   /// key is a 2 letter Country Code
-  saveData(String code) {
+  Future<void> saveData(String code) async {
     ///
     var box = Boxes.getBannedCountries();
 
     var toStore = BannedCountry()..code = code;
 
     ///
-    box.put(code, toStore);
+    await box.put(code, toStore);
   }
 
   /// key is a 2 letter Country Code

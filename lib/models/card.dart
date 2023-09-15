@@ -37,14 +37,12 @@ class BankCard extends HiveObject {
 
     var card = box.get(cardNumber);
 
-    card
-      ?..editing = true
-      ..cardHolder = cardHolder!;
+    card?.editing = true;
 
     if (card != null) await box.put(cardNumber, card);
   }
 
-  saveCard(Map<String, dynamic> card) {
+  Future<void> saveCard(Map<String, dynamic> card) async {
     ///
     var box = Boxes.getCards();
 
@@ -59,13 +57,8 @@ class BankCard extends HiveObject {
       ..lastUpdate = DateTime.now().millisecondsSinceEpoch;
 
     ///
-    box.put(card["cardNumber"], toStore);
+    await box.put(card["cardNumber"], toStore);
   }
 
   Future<void> deleteCard() async => await Boxes.getCards().delete(cardNumber);
-
-  @override
-  String toString() {
-    return "";
-  }
 }

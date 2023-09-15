@@ -10,7 +10,7 @@ class AppTheme extends HiveObject {
 
   /// to save or to update the Theme
   /// - theme, i.e "dark" | "light"
-  saveData(String theme) {
+  Future<void> saveData(String theme) async {
     ///theme value should be "dark" | "light"
     if (theme != 'dark' && theme != 'light') {
       throw 'The theme value should be "dark" | "light", but it received "$theme"';
@@ -23,11 +23,11 @@ class AppTheme extends HiveObject {
     var toStore = AppTheme()..theme = theme;
 
     /// save
-    box.put('theme', toStore);
+    await box.put('theme', toStore);
   }
 
   @override
   String toString() {
-    return "";
+    return "THEME: $theme";
   }
 }
