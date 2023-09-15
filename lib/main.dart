@@ -81,6 +81,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     /// system theme and brightness
     Brightness brightness =
+        // ignore: deprecated_member_use
         MediaQueryData.fromWindow(WidgetsBinding.instance.window)
             .platformBrightness;
     bool isDarkMode = brightness == Brightness.dark;
